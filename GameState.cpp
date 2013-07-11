@@ -6,31 +6,31 @@
 
 int GameState::getUID()
 {
-  return m_UID;
+	return m_UID;
 }
 
 void GameState::setUID(int uid)
 {
-  m_UID = uid;
+	m_UID = uid;
 }
 
 void GameState::handleEvents(sf::Event* event)
 {
-  if(event == NULL)
-    return;
+	if(event == NULL)
+		return;
 
-  SFEvent e(event);
-  dispatchEvent(&e);
+	SFEvent e(event);
+	dispatchEvent(&e);
 }
 
 void GameState::render()
 {
-  RenderTickEvent event;
-  dispatchEvent(&event);
+	RenderTickEvent event;
+	dispatchEvent(&event);
 }
 
 void GameState::update(float delta_ms)
 {
-  UpdateTickEvent event(delta_ms);
-  dispatchEvent(&event);
+	UpdateTickEvent event(delta_ms);
+	dispatchEvent(&event);
 }

@@ -9,65 +9,65 @@ class GameLevel;
 class GameObject : public EventListener
 {
 protected:
-  sf::Sprite m_Sprite;
+	sf::Sprite m_Sprite;
 
-  bool m_MovementEnabled;
-  bool m_Landed;
-  bool m_OnSlope;
-  bool m_IgnoringOneSidedPlatforms;
+	bool m_MovementEnabled;
+	bool m_Landed;
+	bool m_OnSlope;
+	bool m_IgnoringOneSidedPlatforms;
 
-  sf::Vector2f m_Location;
-  sf::Vector2f m_LastLocation;
-  sf::Vector2f m_Velocity;
-  sf::Vector2f m_MaxVelocity;
-  sf::Vector2f m_FiringDirection;
-  sf::FloatRect m_CollisionRect;
+	sf::Vector2f m_Location;
+	sf::Vector2f m_LastLocation;
+	sf::Vector2f m_Velocity;
+	sf::Vector2f m_MaxVelocity;
+	sf::Vector2f m_FiringDirection;
+	sf::FloatRect m_CollisionRect;
 
-  GameLevel *m_GameLevel;
+	GameLevel *m_GameLevel;
 
 public:
-  void nudge(float x, float y);
- 
-  void setLocation(float x, float y);
-  sf::Vector2f getLocation();
+	void nudge(float x, float y);
 
-  void setVelocity(float x, float y);
-  sf::Vector2f getVelocity();
+	void setLocation(float x, float y);
+	sf::Vector2f getLocation();
 
-  void addVelocity(float x, float y);
-  void deductVelocity(float x, float y);
-  
-  void setXVelocity(float x);
-  void setYVelocity(float y);
+	void setVelocity(float x, float y);
+	sf::Vector2f getVelocity();
 
-  sf::FloatRect getCollisionRect();
-  void setCollisionRect(sf::IntRect rect);
-  void flipCollisionRect();
+	void addVelocity(float x, float y);
+	void deductVelocity(float x, float y);
 
-  void init(EventDispatcher* dispatcher, GameLevel *game_level);
-  void updateLocation(float tick_ms, GameLevel* level, bool announce_collision = false);
- 
-  void revertLocation();
-  void revertXLocation();
-  void revertYLocation();
+	void setXVelocity(float x);
+	void setYVelocity(float y);
 
-  void setLanded(bool landed);
-  bool hasLanded();
-  bool hasNotLanded();
-  void setOnSlope(bool on_slope);
-  bool isOnSlope();
-  bool isIgnoringOneSiders();
+	sf::FloatRect getCollisionRect();
+	void setCollisionRect(sf::IntRect rect);
+	void flipCollisionRect();
 
-  void setRotation(float a);
+	void init(EventDispatcher* dispatcher, GameLevel *game_level);
+	void updateLocation(float tick_ms, GameLevel* level, bool announce_collision = false);
 
-  void disableMovement();
-  void enableMovement();
+	void revertLocation();
+	void revertXLocation();
+	void revertYLocation();
 
-  virtual void update(float tick_ms, GameLevel* game_level) = 0;
-  virtual void notify(GameEvent* event) = 0;
-  virtual void renderAt(int x, int y, int brightness) = 0;
-  virtual void renderAtTrueLocation() = 0;
+	void setLanded(bool landed);
+	bool hasLanded();
+	bool hasNotLanded();
+	void setOnSlope(bool on_slope);
+	bool isOnSlope();
+	bool isIgnoringOneSiders();
 
-  GameObject();
-  virtual ~GameObject();
+	void setRotation(float a);
+
+	void disableMovement();
+	void enableMovement();
+
+	virtual void update(float tick_ms, GameLevel* game_level) = 0;
+	virtual void notify(GameEvent* event) = 0;
+	virtual void renderAt(int x, int y, int brightness) = 0;
+	virtual void renderAtTrueLocation() = 0;
+
+	GameObject();
+	virtual ~GameObject();
 };

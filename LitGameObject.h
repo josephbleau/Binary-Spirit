@@ -5,11 +5,11 @@
 class LitGameObject 
 {
 protected:
-  LightSource* m_LightSource;
+	LightSource* m_LightSource;
 
 public:
-  LitGameObject();
-  ~LitGameObject();
+	LitGameObject();
+	~LitGameObject();
 
-  void updateLightLocation(int x, int y);
+	void updateLightLocation(int x, int y);
 };

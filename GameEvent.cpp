@@ -2,7 +2,7 @@
 
 GameEvent::GameEvent(Event::Type type)
 {
-  m_EventType = type;
+	m_EventType = type;
 }
 
 GameEvent::~GameEvent()
@@ -12,5 +12,5 @@ GameEvent::~GameEvent()
 
 Event::Type GameEvent::getEventType()
 {
-  return m_EventType;
+	return m_EventType;
 }

@@ -8,48 +8,48 @@
 
 int main(int argc, char* argv[]) 
 {
-  sf::RenderWindow app(sf::VideoMode(1024, 768), "Binary Spirit"); 
-  //app.setVerticalSyncEnabled(true);
+	sf::RenderWindow app(sf::VideoMode(1024, 768), "Binary Spirit"); 
+	//app.setVerticalSyncEnabled(true);
 
-  ResourceLocator::provideDrawSurface(&app);
-  ResourceLocator::loadResources("res/atlus.txt");
+	ResourceLocator::provideDrawSurface(&app);
+	ResourceLocator::loadResources("res/atlus.txt");
 
-  sf::Event e;
-  sf::Clock timer;
-  
-  sf::Int64 since_last_frame_ms = 0;
-  sf::Int64 frame_start_ms = 0;
-  float delta_ms = 0;
+	sf::Event e;
+	sf::Clock timer;
 
-  InWorldState* state = new InWorldState();
-  state->init("test");
+	sf::Int64 since_last_frame_ms = 0;
+	sf::Int64 frame_start_ms = 0;
+	float delta_ms = 0;
 
-  GameStateManager gsm(state);
+	InWorldState* state = new InWorldState();
+	state->init("test");
 
-  while(app.isOpen())
-  {
-    since_last_frame_ms = timer.getElapsedTime().asMilliseconds() - frame_start_ms;
-    frame_start_ms = timer.getElapsedTime().asMilliseconds();
-    delta_ms = (float) since_last_frame_ms / 1000.f;
-    
-    if(delta_ms > 0.005)
-      delta_ms = 0.005f;
+	GameStateManager gsm(state);
 
-    while(app.pollEvent(e))
-    {
-      if(e.type == sf::Event::Closed)
-      {
-        app.close();
-      }
+	while(app.isOpen())
+	{
+		since_last_frame_ms = timer.getElapsedTime().asMilliseconds() - frame_start_ms;
+		frame_start_ms = timer.getElapsedTime().asMilliseconds();
+		delta_ms = (float) since_last_frame_ms / 1000.f;
 
-      gsm.getCurrentState()->handleEvents(&e);
-    }
+		if(delta_ms > 0.005)
+			delta_ms = 0.005f;
 
-    gsm.getCurrentState()->update(delta_ms);
-    //app.clear();
-    gsm.getCurrentState()->render();
-    app.display();
-  }
+		while(app.pollEvent(e))
+		{
+			if(e.type == sf::Event::Closed)
+			{
+				app.close();
+			}
 
-  return 0;
+			gsm.getCurrentState()->handleEvents(&e);
+		}
+
+		gsm.getCurrentState()->update(delta_ms);
+		//app.clear();
+		gsm.getCurrentState()->render();
+		app.display();
+	}
+
+	return 0;
 }

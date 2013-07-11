@@ -16,69 +16,69 @@ class GameObject;
 
 namespace LevelDebug
 {
-  enum Flag
-  {
-    kDFLAG_SHOWCOLLISION = 0x00001
-  };
+	enum Flag
+	{
+		kDFLAG_SHOWCOLLISION = 0x00001
+	};
 };
 
 class GameLevel : public EventListener
 {
 private:
-  sf::Int32 m_DebugFlags;
+	sf::Int32 m_DebugFlags;
 
-  Tmx::Map* m_Map;
+	Tmx::Map* m_Map;
 
-  LightManager m_LightManager;
+	LightManager m_LightManager;
 
-  std::vector<sf::FloatRect> m_StaticCollidableRects;
-  std::vector<sf::FloatRect> m_OneSidedStaticCollidableRects;
-  std::vector<std::pair<sf::FloatRect, int>> m_SlopedStaticCollidableRects;
- 
-  SpatialHash<CollidableTerrain> *m_CollisionHash;
-  std::vector<CollidableTerrain> m_CollidableTerrain;
+	std::vector<sf::FloatRect> m_StaticCollidableRects;
+	std::vector<sf::FloatRect> m_OneSidedStaticCollidableRects;
+	std::vector<std::pair<sf::FloatRect, int>> m_SlopedStaticCollidableRects;
 
-  sf::Vector2f m_PlayerSpawnPoint;
-  int m_LightLevel;
-  
-  void rebuildCollisionHash();
-  void parseCollisionLayer(const Tmx::Layer* layer);
-  void parseLightMap();
-  void parseMapObject(const Tmx::Object* object);
-  void renderDebugCollisionMapAt(int x = 0, int y = 0);
+	SpatialHash<CollidableTerrain> *m_CollisionHash;
+	std::vector<CollidableTerrain> m_CollidableTerrain;
 
-  bool resolveCollisionWithNormal(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
-  bool resolveCollisionWithOneSided(GameObject* obj, CollidableTerrain* terrain, float xdelta, float ydelta);
-  bool resolveCollisionWithSloped(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
+	sf::Vector2f m_PlayerSpawnPoint;
+	int m_LightLevel;
+
+	void rebuildCollisionHash();
+	void parseCollisionLayer(const Tmx::Layer* layer);
+	void parseLightMap();
+	void parseMapObject(const Tmx::Object* object);
+	void renderDebugCollisionMapAt(int x = 0, int y = 0);
+
+	bool resolveCollisionWithNormal(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
+	bool resolveCollisionWithOneSided(GameObject* obj, CollidableTerrain* terrain, float xdelta, float ydelta);
+	bool resolveCollisionWithSloped(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
 
 public:
-  void setDebugFlag(LevelDebug::Flag flag);
-  void unsetDebugFlag(LevelDebug::Flag flag);
-  bool checkDebugFlag(LevelDebug::Flag flag);
+	void setDebugFlag(LevelDebug::Flag flag);
+	void unsetDebugFlag(LevelDebug::Flag flag);
+	bool checkDebugFlag(LevelDebug::Flag flag);
 
-  void addLightSource(LightSource* light_source);
-  void setLightLevel(int light_level);
-  int getLightLevel();
+	void addLightSource(LightSource* light_source);
+	void setLightLevel(int light_level);
+	int getLightLevel();
 
-  LightManager* getLightManager();
+	LightManager* getLightManager();
 
-  int getMapHeight();
-  int getMapWidth();
+	int getMapHeight();
+	int getMapWidth();
 
-  std::vector<CollidableTerrain*> getNearbyCollidables(sf::FloatRect rect);
-  bool resolveCollision(GameObject* obj, CollidableTerrain* collidable, Axis::Axis axis, float xdelta, float ydelta);
+	std::vector<CollidableTerrain*> getNearbyCollidables(sf::FloatRect rect);
+	bool resolveCollision(GameObject* obj, CollidableTerrain* collidable, Axis::Axis axis, float xdelta, float ydelta);
 
-  void init(EventDispatcher* dispatcher, std::string map_name);
-  
-  void renderAt(int x = 0, int y = 0);
-  void renderLayerByName(std::string layer_name, sf::IntRect camera_bounds);
-  void renderLightMap(sf::IntRect camera_bounds);
+	void init(EventDispatcher* dispatcher, std::string map_name);
 
-  void notify(GameEvent* event);
+	void renderAt(int x = 0, int y = 0);
+	void renderLayerByName(std::string layer_name, sf::IntRect camera_bounds);
+	void renderLightMap(sf::IntRect camera_bounds);
 
-  const std::vector<sf::IntRect>& getStaticCollidables();
-  const sf::Vector2f& getPlayerSpawnPoint();
+	void notify(GameEvent* event);
 
-  GameLevel();
-  ~GameLevel();
+	const std::vector<sf::IntRect>& getStaticCollidables();
+	const sf::Vector2f& getPlayerSpawnPoint();
+
+	GameLevel();
+	~GameLevel();
 };

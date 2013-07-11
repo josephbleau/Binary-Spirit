@@ -8,21 +8,21 @@
 class GameState : public EventDispatcher, public EventListener
 {
 protected:
-  int m_UID;
+	int m_UID;
 
 public:
-  void handleEvents(sf::Event* e);
-  void render();
-  void update(float tick_ms);
+	void handleEvents(sf::Event* e);
+	void render();
+	void update(float tick_ms);
 
-  virtual void onLoad() = 0;
-  virtual void onDestroy() = 0;
+	virtual void onLoad() = 0;
+	virtual void onDestroy() = 0;
 
-  void setUID(int UID);
-  int getUID();
+	void setUID(int UID);
+	int getUID();
 
-  virtual void notify(GameEvent* event) = 0;
+	virtual void notify(GameEvent* event) = 0;
 
 protected: 
-  GameState(){}
+	GameState(){}
 };
