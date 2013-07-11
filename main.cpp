@@ -3,6 +3,7 @@
 #include "ResourceLocator.h"
 #include "GameStateManager.h"
 #include "InWorldState.h"
+
 #include <iostream>
 
 int main(int argc, char* argv[]) 

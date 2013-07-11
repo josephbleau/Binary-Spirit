@@ -8,15 +8,18 @@
 #include "GameObjectTerrainCollision.h"
 
 GameObject::GameObject() 
-{
-  m_MaxVelocity.x = 300;
-  m_MaxVelocity.y = 400;
-  m_Velocity.x = 0;
-  m_Velocity.y = 0;
-  m_OnSlope = false;
-  m_MovementEnabled = true;
-  m_IgnoringOneSidedPlatforms = false;
-}
+	: m_Sprite()
+	, m_MovementEnabled(true)
+	, m_Landed(false)
+	, m_OnSlope(false)
+	, m_IgnoringOneSidedPlatforms(false)
+	, m_Location()
+	, m_Velocity(0, 0)
+	, m_MaxVelocity(300, 400)
+	, m_FiringDirection(1,0)
+	, m_CollisionRect()
+	, m_GameLevel(nullptr)
+{}
 
 GameObject::~GameObject()
 {
@@ -44,13 +47,13 @@ void GameObject::updateLocation(float tick_ms, GameLevel* level, bool announce_c
     bool y_collided = false;
     bool landed = false;
 
-    for(size_t i = 0; i < collidables.size(); i++)
+	for(size_t i = 0; i < collidables.size(); i++)
     {
       if(level->resolveCollision(this, collidables[i], Axis::X, delta_x, 0))
       {
         x_collided = true;
       }
-      if(level->resolveCollision(this, collidables[i], Axis::Y, 0, delta_y))
+	  if((delta_y == 0 && m_Landed) || level->resolveCollision(this, collidables[i], Axis::Y, 0, delta_y))
       {
         y_collided = true;
 
@@ -78,7 +81,6 @@ void GameObject::updateLocation(float tick_ms, GameLevel* level, bool announce_c
     {
       GameObjectTerrainCollision e(this);
       getDispatcher()->dispatchEvent(&e); 
-      return;
     }
 
     setLanded(landed);

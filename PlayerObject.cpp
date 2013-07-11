@@ -21,6 +21,7 @@ PlayerObject::PlayerObject()
   m_LastDrawLoc.x = 0;
   m_LastDrawLoc.y = 0;
   m_RunSpeed = 200;
+  m_MouseLookLeft = false;
   m_CurrentProjectileType = ProjectileType::PROJECTILE_BASIC;
 
   sf::IntRect collision_rect;
@@ -58,6 +59,13 @@ void PlayerObject::renderAt(int x, int y, int brightness)
       getCurrentAnimation()->render();
     }
   }
+
+
+  sf::VertexArray line(sf::Lines, 2);
+  line[0].position = sf::Vector2f(1024/2,768/2);
+  line[1].position = getReticuleVector();
+
+  ResourceLocator::getDrawSurface()->draw(line);
 }
 
 void PlayerObject::renderAtTrueLocation()
@@ -68,11 +76,11 @@ void PlayerObject::renderAtTrueLocation()
 
 void PlayerObject::updateAnimation(float tick_ms)
 {
-  if(getVelocity().x < 0)
+  if(m_MouseLookLeft)
   {
     m_XFlipped = true;
   }
-  else if(getVelocity().x > 0)
+  else if(!m_MouseLookLeft)
   {
     m_XFlipped = false;
   }
@@ -99,40 +107,40 @@ void PlayerObject::updateAnimation(float tick_ms)
 
 void PlayerObject::update(float tick_ms, GameLevel* level)
 {
-  if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
-     sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) ||
-     (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
-     !sf::Keyboard::isKeyPressed(sf::Keyboard::Left)))
+  if((sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
+     sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ||
+     (!sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
+     !sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
   {
     setXVelocity(0);
   }
 
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
     setXVelocity((float) m_RunSpeed);
   }
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     setXVelocity((float) (-1*m_RunSpeed));
   }
 
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
   {
     m_IgnoringOneSidedPlatforms = true;
   }
   else
   {
     m_IgnoringOneSidedPlatforms = false;
-  }
-  
+  }  
 
   if(m_CanJump && hasLanded())
   {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
       setYVelocity(-350);
       m_JumpTimer.second.restart();
       m_CanJump = false;
+	  m_Landed = false;
     }
   }
 
@@ -140,14 +148,14 @@ void PlayerObject::update(float tick_ms, GameLevel* level)
   {
     if(m_JumpTimer.second.getElapsedTime().asMilliseconds() < 300)
     {
-      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
       {
         addVelocity(0, -1650 * tick_ms);
       }
     }
   }
 
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) == false)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) == false && sf::Keyboard::isKeyPressed(sf::Keyboard::W) == false)
   {
     m_CanJump = true;
   }
@@ -159,22 +167,18 @@ void PlayerObject::update(float tick_ms, GameLevel* level)
 
 void PlayerObject::handleEvents(sf::Event* event)
 {
-  if(event->type == sf::Event::KeyPressed)
+  if(event->type == sf::Event::MouseButtonPressed)
   {
-    if(event->key.code == sf::Keyboard::Space)
+	if(event->mouseButton.button == 0)
     {
       ProjectileObject* projectile = new ProjectileObject(m_CurrentProjectileType);
       projectile->init(getDispatcher(), m_GameLevel);
       projectile->setLocation(getLocation().x, getLocation().y);
       
-      if(m_XFlipped)
-      {
-        projectile->setVelocity(-400,0);
-      }
-      else
-      {
-        projectile->setVelocity(400, 0);
-      }
+
+      projectile->setVelocity( m_FiringDirection.x * 400, m_FiringDirection.y * 400);
+
+
 
       ProjectileFiredEvent e(projectile);
       getDispatcher()->dispatchEvent(&e);
@@ -210,9 +214,39 @@ void PlayerObject::notify(GameEvent* event)
     case Event::EVENT_SFEVENT:
     {
       sf::Event* sfevent = ((SFEvent*) event)->getEvent();
-      handleEvents(sfevent);
-      break;
+	  if(sfevent->type == sf::Event::MouseMoved)
+	  {
+		  int xpos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).x - 1024/2;
+		  int ypos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).y - 768/2;
+		  float mag = sqrt(xpos*xpos+ypos*ypos);
+		  float xnorm = xpos / mag;
+		  float ynorm = ypos / mag;
+
+		  m_FiringDirection.x = xnorm;
+		  m_FiringDirection.y = ynorm;
+
+		  if(xpos < 0){
+			  m_MouseLookLeft = true;
+		  }
+		  else if(xpos > 0){
+			  m_MouseLookLeft = false;
+		  }
+	  }
+	  else
+	  {
+	    handleEvents(sfevent);
+	  }
+	  break;
     }
   }
 }
 
+sf::Vector2f PlayerObject::getReticuleVector() const
+{
+	sf::Vector2f reticule( m_FiringDirection );
+	reticule.x *= 30;
+	reticule.y *= 30;
+	reticule.x += 1024/2;
+	reticule.y += 768/2;
+	return reticule;
+}

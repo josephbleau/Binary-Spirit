@@ -20,6 +20,7 @@ protected:
   sf::Vector2f m_LastLocation;
   sf::Vector2f m_Velocity;
   sf::Vector2f m_MaxVelocity;
+  sf::Vector2f m_FiringDirection;
   sf::FloatRect m_CollisionRect;
 
   GameLevel *m_GameLevel;

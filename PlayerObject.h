@@ -13,6 +13,7 @@ private:
   sf::Vector2i m_LastDrawLoc;
   int m_RunSpeed;
   bool m_CanJump;
+  bool m_MouseLookLeft;
 
   void handleEvents(sf::Event* event);
   std::pair<sf::Int64, sf::Clock> m_JumpTimer;
@@ -31,4 +32,6 @@ public:
   void update(float tick_ms, GameLevel* level);
   void init(EventDispatcher* dispatcher, GameLevel* game_level);
   void notify(GameEvent* event);
+
+  sf::Vector2f getReticuleVector() const;
 };

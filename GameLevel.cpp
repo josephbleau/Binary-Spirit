@@ -295,10 +295,6 @@ bool GameLevel::resolveCollision(GameObject* obj, CollidableTerrain* terrain, Ax
 
 bool GameLevel::resolveCollisionWithNormal(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta)
 {
-  // The idea behind this being if velocity is 0, we're standing still, 
-  // but we still need to check if the ground is beneath us
-  if(ydelta == 0) 
-	  ydelta++;
 
   sf::FloatRect r1 = obj->getCollisionRect();
   r1.top  += ydelta;
