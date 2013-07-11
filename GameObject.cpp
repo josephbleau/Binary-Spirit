@@ -76,8 +76,7 @@ void GameObject::updateLocation(float tick_ms, GameLevel* level, bool announce_c
       m_Location.y += delta_y;
     }
 
-
-    if(announce_collision && (x_collided || m_OnSlope))
+    if(announce_collision && (y_collided || x_collided || m_OnSlope))
     {
       GameObjectTerrainCollision e(this);
       getDispatcher()->dispatchEvent(&e); 

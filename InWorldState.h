@@ -32,6 +32,8 @@ public:
 
   void notify(GameEvent* event);
 
+  sf::IntRect getCamera() const;
+
   InWorldState();
   ~InWorldState();
 };

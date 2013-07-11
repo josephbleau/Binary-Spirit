@@ -5,6 +5,7 @@ namespace Event
   enum Type
   { 
     EVENT_SFEVENT, 
+	EVENT_CLICK,
     EVENT_RENDER, 
     EVENT_UPDATE, 
     EVENT_PROJECTILE_FIRED,

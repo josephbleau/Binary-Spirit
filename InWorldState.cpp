@@ -9,8 +9,10 @@
 #include "GameEvent.h"
 #include "UpdateTickEvent.h"
 #include "SFEvent.h"
+#include "ClickEvent.h"
 #include "ProjectileFiredEvent.h"
 #include "GameObjectTerrainCollision.h"
+#include "ResourceLocator.h"
 
 #include "MiscUtils.h"
 
@@ -99,6 +101,7 @@ void InWorldState::render()
   camera_offset.left = MiscUtils::min(camera_offset.left, magic_width);
   camera_offset.top = MiscUtils::max(0, m_Camera.top - m_Camera.height/2-1);
   camera_offset.top = MiscUtils::min(camera_offset.top, magic_height);
+
   camera_offset.width = m_Camera.width;
   camera_offset.height = m_Camera.height;
 
@@ -150,6 +153,14 @@ void InWorldState::notify(GameEvent* event)
     case Event::EVENT_SFEVENT:
     {
       sf::Event* sf_event = ((SFEvent*) event)->getEvent();
+	  sf::RenderWindow& renderWindow = *ResourceLocator::getDrawSurface();
+
+	  int xpos = (sf::Mouse::getPosition(renderWindow).x - 1024/2);
+	  int ypos = (sf::Mouse::getPosition(renderWindow).y - 768/2);
+
+	  ClickEvent clickEvent(xpos, ypos);
+	  dispatchEvent(&clickEvent);
+
       handleEvents(sf_event);
       break;
     }
@@ -166,4 +177,9 @@ void InWorldState::notify(GameEvent* event)
       break;
     }
   }
+}
+
+sf::IntRect InWorldState::getCamera() const
+{
+	return m_Camera;
 }

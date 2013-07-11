@@ -10,6 +10,7 @@
 #include "RenderTickEvent.h"
 #include "UpdateTickEvent.h"
 #include "SFEvent.h"
+#include "ClickEvent.h"
 
 
 #include <iostream>
@@ -174,11 +175,8 @@ void PlayerObject::handleEvents(sf::Event* event)
       ProjectileObject* projectile = new ProjectileObject(m_CurrentProjectileType);
       projectile->init(getDispatcher(), m_GameLevel);
       projectile->setLocation(getLocation().x, getLocation().y);
-      
-
+     
       projectile->setVelocity( m_FiringDirection.x * 400, m_FiringDirection.y * 400);
-
-
 
       ProjectileFiredEvent e(projectile);
       getDispatcher()->dispatchEvent(&e);
@@ -211,6 +209,20 @@ void PlayerObject::notify(GameEvent* event)
     
       break;
     }
+	case Event::EVENT_CLICK:
+	{
+		sf::Vector2i position = ((ClickEvent*) event)->getPosition();
+		std::cout << m_Location.x << " - " << position.x << std::endl;
+
+		float mag = sqrt(position.x*position.x+position.y*position.y);
+		float xnorm = position.x / mag;
+		float ynorm = position.y / mag;
+
+		m_FiringDirection.x = xnorm;
+		m_FiringDirection.y = ynorm;
+
+		break;
+	}
     case Event::EVENT_SFEVENT:
     {
       sf::Event* sfevent = ((SFEvent*) event)->getEvent();
@@ -218,13 +230,6 @@ void PlayerObject::notify(GameEvent* event)
 	  {
 		  int xpos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).x - 1024/2;
 		  int ypos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).y - 768/2;
-		  float mag = sqrt(xpos*xpos+ypos*ypos);
-		  float xnorm = xpos / mag;
-		  float ynorm = ypos / mag;
-
-		  m_FiringDirection.x = xnorm;
-		  m_FiringDirection.y = ynorm;
-
 		  if(xpos < 0){
 			  m_MouseLookLeft = true;
 		  }
