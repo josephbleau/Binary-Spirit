@@ -15,6 +15,7 @@ private:
 	GameObject* m_TrackedObject;
 
 	sf::Vector2f m_ScreenSize;
+	sf::Vector2f m_WorldSize;
 	sf::Vector2f m_Position;
 	sf::Vector2f m_TargetPosition;
 
@@ -38,9 +39,12 @@ public:
 	void SetTrackedObject(GameObject* object);
 	void SetSeekObject(GameObject* object);
 
-	void SetPosition(unsigned x, unsigned y);
+	void PanPosition(float x, float y);
+	void SetPosition(float x, float y);
 	sf::Vector2f GetPosition() const;
 	sf::Vector2f GetSize() const;
+
+	void SetWorldSize(float x, float y);
 	
 	void Update(float delta = 0.0f);
 };

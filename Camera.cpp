@@ -88,19 +88,19 @@ void Camera::Update(float delta)
 	{
 		if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
 		{
-			m_Position.x += m_PanSpeed * delta;
+			PanPosition(m_PanSpeed * delta, 0.0f);
 		}
 		else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
 		{
-			m_Position.x -= m_PanSpeed * delta;
+			PanPosition(-m_PanSpeed * delta, 0.0f);
 		}
 		if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
 		{
-			m_Position.y -= m_PanSpeed * delta;
+			PanPosition(0.0f, -m_PanSpeed * delta);
 		}
 		else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
 		{
-			m_Position.y += m_PanSpeed * delta;
+			PanPosition(0.0f, m_PanSpeed * delta);
 		}
 
 		return;
@@ -113,7 +113,7 @@ void Camera::Update(float delta)
 		float xdist = (halfScreenWidth + m_Position.x) - m_TargetPosition.x;
 		float ydist = (halfScreenHeight + m_Position.y) - m_TargetPosition.y;
 		float mag = sqrt(xdist*xdist+ydist+ydist);
-		if(mag==0)mag = 1;
+		if(mag==0) mag = 1;
 		float xnorm = xdist/mag;
 		float ynorm = ydist/mag;
 
@@ -124,8 +124,8 @@ void Camera::Update(float delta)
 		}
 		else
 		{
-			m_Position.x -= xnorm * m_PanSpeed * delta;
-			m_Position.y -= ynorm * m_PanSpeed * delta;
+			PanPosition(-xnorm * m_PanSpeed * delta,
+						-ynorm * m_PanSpeed * delta);
 		}
 
 		return;
@@ -134,15 +134,38 @@ void Camera::Update(float delta)
 	{
 		// We're object locked to a valid object, attempt to put this object
 		// at the center of the screen.
-		m_Position.x = m_TrackedObject->getLocation().x - halfScreenWidth;
-		m_Position.y = m_TrackedObject->getLocation().y - halfScreenHeight;
+		SetPosition(m_TrackedObject->getLocation().x - halfScreenWidth,
+			        m_TrackedObject->getLocation().y - halfScreenHeight);
 	}
 }
 
-void Camera::SetPosition(unsigned x, unsigned y)
+void Camera::PanPosition(float x, float y)
 {
+	SetPosition( m_Position.x + x, m_Position.y + y );
+}
+
+void Camera::SetPosition(float x, float y)
+{
+	if( m_IsEdgeLocked )
+	{
+		if( x < 0 )
+			x = 0;
+		if( x > m_WorldSize.x - m_ScreenSize.x)
+			x = m_WorldSize.x - m_ScreenSize.x;
+		if( y < 0 )
+			y = 0;
+		if( y > m_WorldSize.y - m_ScreenSize.y )
+			y = m_WorldSize.y - m_ScreenSize.y;
+	}
+
 	m_Position.x = x;
 	m_Position.y = y;
+}
+
+void Camera::SetWorldSize(float x, float y)
+{
+	m_WorldSize.x = x;
+	m_WorldSize.y = y;
 }
 
 sf::Vector2f Camera::GetPosition() const

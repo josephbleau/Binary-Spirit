@@ -34,7 +34,7 @@ void InWorldState::init(std::string map_name)
 {
 	registerListener(this);
 	m_GameLevel->init((EventDispatcher*) this, map_name);
-
+	m_RealCamera.SetWorldSize(m_GameLevel->getMapWidth(), m_GameLevel->getMapHeight());
 	m_Player->init((EventDispatcher*) this, m_GameLevel);
 
 	const sf::Vector2f& spawn_point = m_GameLevel->getPlayerSpawnPoint();
