@@ -59,3 +59,29 @@ Animation* AnimatedObject::getCurrentAnimation()
 {
 	return m_CurrentAnimation;
 }
+
+void AnimatedObject::renderAt(const Camera& camera, int brightness)
+{
+	if(getCurrentAnimation())
+	{
+		int texture_w = m_Sprite.getTextureRect().width;
+		int texture_h = m_Sprite.getTextureRect().height;
+		float offset_x = m_Location.x - camera.GetPosition().x;
+		float offset_y = m_Location.y - camera.GetPosition().y;
+
+		m_Sprite.setColor(sf::Color(brightness, brightness, brightness, 255));
+		m_Sprite.setPosition(offset_x, offset_y);
+
+		if(m_XFlipped)
+		{
+			m_Sprite.scale(-1.f,1.f);
+			m_Sprite.move((float)texture_w,0.f);
+			getCurrentAnimation()->render();
+			m_Sprite.scale(-1.f,1.f);
+		}
+		else
+		{
+			getCurrentAnimation()->render();
+		}
+	}
+}

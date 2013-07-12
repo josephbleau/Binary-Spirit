@@ -25,6 +25,8 @@ public:
 	bool registerAnimation(std::string local_name, std::string global_name);
 	bool setCurrentAnimation(std::string local_name);
 
+	void renderAt(const Camera& camera, int brightness);
+
 	virtual void update(float tick_ms, GameLevel* game_level) = 0;
 	virtual void notify(GameEvent* e) = 0;
 };

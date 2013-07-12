@@ -23,20 +23,6 @@ ProjectileObject::~ProjectileObject()
 	}
 }
 
-
-void ProjectileObject::renderAt(const Camera& camera, int brightness)
-{
-	m_Sprite.setColor(sf::Color(brightness, brightness, brightness, 255));
-	float offset_x = m_Location.x - camera.GetPosition().x;
-	float offset_y = m_Location.y - camera.GetPosition().y;
-	m_Sprite.setPosition(offset_x,offset_y);
-	getCurrentAnimation()->render();
-}
-
-void ProjectileObject::renderAtTrueLocation()
-{
-}
-
 void ProjectileObject::update(float tick_ms, GameLevel* level)
 {
 	m_Sprite.setPosition(m_Location);
