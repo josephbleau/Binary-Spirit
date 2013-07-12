@@ -21,10 +21,9 @@ InWorldState::InWorldState()
 	, m_Player(new PlayerObject())
 	, m_GameObjects()
 	, m_StaticCollidables()
-	, m_Camera(0, 0, ResourceLocator::getDrawSurfaceSize().x, ResourceLocator::getDrawSurfaceSize().y)
-	, m_RealCamera(ResourceLocator::getDrawSurfaceSize())
+	, m_Camera(ResourceLocator::getDrawSurfaceSize())
 {
-	m_RealCamera.SetTrackedObject(m_Player);
+	m_Camera.SetTrackedObject(m_Player);
 }
 
 InWorldState::~InWorldState()
@@ -34,7 +33,7 @@ void InWorldState::init(std::string map_name)
 {
 	registerListener(this);
 	m_GameLevel->init((EventDispatcher*) this, map_name);
-	m_RealCamera.SetWorldSize(m_GameLevel->getMapWidth(), m_GameLevel->getMapHeight());
+	m_Camera.SetWorldSize(m_GameLevel->getMapWidth(), m_GameLevel->getMapHeight());
 	m_Player->init((EventDispatcher*) this, m_GameLevel);
 
 	const sf::Vector2f& spawn_point = m_GameLevel->getPlayerSpawnPoint();
@@ -72,10 +71,10 @@ void InWorldState::handleEvents(sf::Event* event)
 		}
 		else if( event->key.code == sf::Keyboard::F2 )
 		{
-			if( m_RealCamera.IsFreeLookOn() )
-				m_RealCamera.DisableFreeLook();
+			if( m_Camera.IsFreeLookOn() )
+				m_Camera.DisableFreeLook();
 			else
-				m_RealCamera.EnableFreeLook();
+				m_Camera.EnableFreeLook();
 		}
 	}
 }
@@ -93,29 +92,29 @@ void InWorldState::update(float tick_ms)
 		m_GameObjects[i]->update(tick_ms, m_GameLevel);
 	}
 
-	m_RealCamera.Update(tick_ms);
+	m_Camera.Update(tick_ms);
 }
 
 void InWorldState::render()
 {
 	// Render background layer, player will pass in front of
 	// anything rendered in this layer.
-	m_GameLevel->renderLayerByName("Background", m_RealCamera);
+	m_GameLevel->renderLayerByName("Background", m_Camera);
 
 	// Render player and all game objects.
-	m_Player->renderAt(m_RealCamera, m_GameLevel->getLightLevel());
+	m_Player->renderAt(m_Camera, m_GameLevel->getLightLevel());
 
 	for(size_t i = 0; i < m_GameObjects.size(); i++)
 	{
-		m_GameObjects[i]->renderAt(m_RealCamera, 255);
+		m_GameObjects[i]->renderAt(m_Camera, 255);
 	}
 
 	// Render foreground layer, player will pass behind
 	// anything rendered in this layer.
-	m_GameLevel->renderLayerByName("Foreground", m_RealCamera);
+	m_GameLevel->renderLayerByName("Foreground", m_Camera);
 
 	// Lights will render last and be on top of all layers.
-	m_GameLevel->renderLightMap(m_RealCamera);
+	m_GameLevel->renderLightMap(m_Camera);
 }
 
 void InWorldState::onLoad()
@@ -151,8 +150,8 @@ void InWorldState::notify(GameEvent* event)
 			{
 				sf::RenderWindow& renderWindow = *ResourceLocator::getDrawSurface();
 
-				int xpos = m_Camera.left - (sf::Mouse::getPosition(renderWindow).x - 1024/2);
-				int ypos = m_Camera.top - (sf::Mouse::getPosition(renderWindow).y - 768/2);
+				int xpos = m_Camera.GetPosition().x - (sf::Mouse::getPosition(renderWindow).x - 1024/2);
+				int ypos = m_Camera.GetPosition().y - (sf::Mouse::getPosition(renderWindow).y - 768/2);
 
 				//ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC );
 				//projectile->init(getDispatcher(), m_GameLevel);
@@ -182,9 +181,4 @@ void InWorldState::notify(GameEvent* event)
 			break;
 		}
 	}
-}
-
-sf::IntRect InWorldState::getCamera() const
-{
-	return m_Camera;
 }

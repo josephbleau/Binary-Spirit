@@ -17,8 +17,7 @@ private:
 	std::vector<GameObject*> m_GameObjects;
 	std::vector<sf::IntRect> m_StaticCollidables;
 
-	sf::IntRect m_Camera;
-	Camera m_RealCamera; // rename when old camera is replaced
+	Camera m_Camera; 
 
 public:
 	void registerObject(GameObject* game_object);
@@ -34,8 +33,6 @@ public:
 	void onDestroy();
 
 	void notify(GameEvent* event);
-
-	sf::IntRect getCamera() const;
 
 	InWorldState();
 	~InWorldState();
