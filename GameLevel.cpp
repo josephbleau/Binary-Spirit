@@ -6,7 +6,9 @@
 #include "ResourceLocator.h"
 #include "MiscUtils.h"
 #include "EventDispatcher.h"
+#include "EnemyObject.h"
 #include "GameObject.h"
+#include "InWorldState.h"
 #include "LightSource.h"
 
 #include "GameEvent.h"
@@ -14,7 +16,8 @@
 #include "SpatialHash.h"
 #include "SpecialTerrainObject.h"
 
-GameLevel::GameLevel()
+GameLevel::GameLevel(InWorldState* worldState)
+	: m_WorldState(worldState)
 {
 	m_DebugFlags = 0;
 	//  MiscUtils::set_flag(LevelDebug::kDFLAG_SHOWCOLLISION, m_DebugFlags);
@@ -87,11 +90,11 @@ void GameLevel::init(EventDispatcher* dispatcher, std::string map_name)
 			for(int j = 0; j < object_group->GetNumObjects(); j++)
 			{
 				const Tmx::Object* object = object_group->GetObject(j);
-				parseMapObject(object);
+				parseMapObject(const_cast<Tmx::Object*>(object));
 			}
 		}
 
-		std::cout << "\t\t" << m_LightManager.getNumLights() << " lights loaded" << std::endl;
+		std::cout << "\t" << m_LightManager.getNumLights() << " lights loaded" << std::endl;
 	}
 
 	rebuildCollisionHash();
@@ -178,7 +181,7 @@ std::vector<CollidableTerrain*> GameLevel::getNearbyCollidables(sf::FloatRect re
 	return m_CollisionHash->getItems(rect.left, rect.top, rect.width, rect.height);
 }
 
-void GameLevel::parseMapObject(const Tmx::Object* object)
+void GameLevel::parseMapObject(Tmx::Object* object)
 {
 	if(object)
 	{
@@ -212,8 +215,6 @@ void GameLevel::parseMapObject(const Tmx::Object* object)
 					location,
 					collision_rect
 					);
-
-
 			}
 		}
 		else if(object->GetName() == "light")
@@ -245,6 +246,14 @@ void GameLevel::parseMapObject(const Tmx::Object* object)
 			{
 				m_LightManager.addLight(LightSource::createConicalLightSource(sf::IntRect(x,y,w,h), sf::Color(r,g,b,a)));
 			}
+		}
+		else if(object->GetName() == "enemy")
+		{
+			std::cout << "\tSpawning enemies" << std::endl;
+
+			EnemyObject* enemy = new EnemyObject(object);
+			enemy->init((EventDispatcher*) m_WorldState, this);
+			m_WorldState->registerObject((GameObject*)enemy);
 		}
 		else
 		{

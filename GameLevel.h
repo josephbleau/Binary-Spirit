@@ -11,6 +11,7 @@
 #include "LightManager.h"
 #include "SpatialHash.h"
 
+class InWorldState;
 class GameEvent;
 class GameObject;
 
@@ -29,6 +30,7 @@ private:
 
 	Tmx::Map* m_Map;
 
+	InWorldState* m_WorldState;
 	LightManager m_LightManager;
 
 	std::vector<sf::FloatRect> m_StaticCollidableRects;
@@ -44,7 +46,7 @@ private:
 	void rebuildCollisionHash();
 	void parseCollisionLayer(const Tmx::Layer* layer);
 	void parseLightMap();
-	void parseMapObject(const Tmx::Object* object);
+	void parseMapObject(Tmx::Object* object);
 	void renderDebugCollisionMapAt(int x = 0, int y = 0);
 
 	bool resolveCollisionWithNormal(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
@@ -52,6 +54,9 @@ private:
 	bool resolveCollisionWithSloped(GameObject* obj, CollidableTerrain* terrain, Axis::Axis axis, float xdelta, float ydelta);
 
 public:
+	GameLevel(InWorldState* worldState);
+	~GameLevel();
+
 	void setDebugFlag(LevelDebug::Flag flag);
 	void unsetDebugFlag(LevelDebug::Flag flag);
 	bool checkDebugFlag(LevelDebug::Flag flag);
@@ -78,9 +83,6 @@ public:
 
 	const std::vector<sf::IntRect>& getStaticCollidables();
 	const sf::Vector2f& getPlayerSpawnPoint();
-
-	GameLevel();
-	~GameLevel();
 };
 
 #endif

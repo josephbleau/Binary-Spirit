@@ -17,13 +17,13 @@
 #include "MiscUtils.h"
 
 InWorldState::InWorldState()
-	: m_GameLevel(new GameLevel())
-	, m_Player(new PlayerObject())
+	: m_GameLevel(this)
+	, m_Player()
 	, m_GameObjects()
 	, m_StaticCollidables()
 	, m_Camera(ResourceLocator::getDrawSurfaceSize())
 {
-	m_Camera.SetTrackedObject(m_Player);
+	m_Camera.SetTrackedObject(&m_Player);
 }
 
 InWorldState::~InWorldState()
@@ -32,13 +32,13 @@ InWorldState::~InWorldState()
 void InWorldState::init(std::string map_name)
 {
 	registerListener(this);
-	m_GameLevel->init((EventDispatcher*) this, map_name);
+	m_GameLevel.init((EventDispatcher*) this, map_name);
 	m_Camera.setDispatcher((EventDispatcher*) this);
-	m_Camera.SetWorldSize(m_GameLevel->getMapWidth(), m_GameLevel->getMapHeight());
-	m_Player->init((EventDispatcher*) this, m_GameLevel);
+	m_Camera.SetWorldSize(m_GameLevel.getMapWidth(), m_GameLevel.getMapHeight());
+	m_Player.init((EventDispatcher*) this, &m_GameLevel);
 
-	const sf::Vector2f& spawn_point = m_GameLevel->getPlayerSpawnPoint();
-	m_Player->setLocation(spawn_point.x, spawn_point.y);
+	const sf::Vector2f& spawn_point = m_GameLevel.getPlayerSpawnPoint();
+	m_Player.setLocation(spawn_point.x, spawn_point.y);
 }
 
 void InWorldState::registerObject(GameObject* game_object)
@@ -68,7 +68,7 @@ void InWorldState::handleEvents(sf::Event* event)
 	{
 		if(event->key.code == sf::Keyboard::F1)
 		{
-			m_GameLevel->setDebugFlag(LevelDebug::kDFLAG_SHOWCOLLISION);
+			m_GameLevel.setDebugFlag(LevelDebug::kDFLAG_SHOWCOLLISION);
 		}
 		else if( event->key.code == sf::Keyboard::F2 )
 		{
@@ -82,15 +82,15 @@ void InWorldState::handleEvents(sf::Event* event)
 
 void InWorldState::update(float tick_ms)
 {
-	if(m_Player->hasNotLanded())
+	if(m_Player.hasNotLanded())
 	{
-		m_Player->addVelocity(0, 1800 * tick_ms);
+		m_Player.addVelocity(0, 1800 * tick_ms);
 	}  
 
-	m_Player->update(tick_ms, m_GameLevel);
+	m_Player.update(tick_ms, &m_GameLevel);
 	for(size_t i = 0; i < m_GameObjects.size(); i++)
 	{
-		m_GameObjects[i]->update(tick_ms, m_GameLevel);
+		m_GameObjects[i]->update(tick_ms, &m_GameLevel);
 	}
 
 	m_Camera.Update(tick_ms);
@@ -100,10 +100,10 @@ void InWorldState::render()
 {
 	// Render background layer, player will pass in front of
 	// anything rendered in this layer.
-	m_GameLevel->renderLayerByName("Background", m_Camera);
+	m_GameLevel.renderLayerByName("Background", m_Camera);
 
 	// Render player and all game objects.
-	m_Player->renderAt(m_Camera, m_GameLevel->getLightLevel());
+	m_Player.renderAt(m_Camera, m_GameLevel.getLightLevel());
 
 	for(size_t i = 0; i < m_GameObjects.size(); i++)
 	{
@@ -112,10 +112,10 @@ void InWorldState::render()
 
 	// Render foreground layer, player will pass behind
 	// anything rendered in this layer.
-	m_GameLevel->renderLayerByName("Foreground", m_Camera);
+	m_GameLevel.renderLayerByName("Foreground", m_Camera);
 
 	// Lights will render last and be on top of all layers.
-	m_GameLevel->renderLightMap(m_Camera);
+	m_GameLevel.renderLightMap(m_Camera);
 }
 
 void InWorldState::onLoad()

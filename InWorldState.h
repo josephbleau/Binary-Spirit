@@ -5,16 +5,17 @@
 #include <TmxParser/Tmx.h>
 
 #include "Camera.h"
+#include "GameLevel.h"
+#include "PlayerObject.h"
 
-class GameLevel;
 class GameObject;
-class PlayerObject;
 
 class InWorldState : public GameState
 {
 private:
-	GameLevel* m_GameLevel;
-	PlayerObject* m_Player;
+	GameLevel m_GameLevel;
+	PlayerObject m_Player;
+
 	std::vector<GameObject*> m_GameObjects;
 	std::vector<sf::IntRect> m_StaticCollidables;
 
