@@ -150,21 +150,13 @@ void InWorldState::notify(GameEvent* event)
 			{
 				sf::RenderWindow& renderWindow = *ResourceLocator::getDrawSurface();
 
-				int xpos = m_Camera.GetPosition().x - (sf::Mouse::getPosition(renderWindow).x - 1024/2);
-				int ypos = m_Camera.GetPosition().y - (sf::Mouse::getPosition(renderWindow).y - 768/2);
+				int xpos = m_Camera.GetPosition().x + sf::Mouse::getPosition(renderWindow).x;
+				int ypos = m_Camera.GetPosition().y + sf::Mouse::getPosition(renderWindow).y;
 
-				//ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC );
-				//projectile->init(getDispatcher(), m_GameLevel);
-				//projectile->setLocation(xpos, ypos);
-
-				//projectile->setVelocity( 0, 0 );
-
-				//ProjectileFiredEvent e(projectile);
-				//getDispatcher()->dispatchEvent(&e);
-
-				//ClickEvent clickEvent(xpos, ypos);
-				//dispatchEvent(&clickEvent);
+				ClickEvent clickEvent(xpos, ypos);
+				dispatchEvent(&clickEvent);
 			}
+
 			handleEvents(sf_event);
 			break;
 		}

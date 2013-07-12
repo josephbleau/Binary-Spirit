@@ -209,12 +209,15 @@ void PlayerObject::notify(GameEvent* event)
 		{
 			sf::Vector2i position = ((ClickEvent*) event)->getPosition();
 
+			position.x = m_Location.x - position.x;
+			position.y = m_Location.y - position.y;
+
 			float mag = sqrt(position.x*position.x+position.y*position.y);
 			float xnorm = position.x / mag;
 			float ynorm = position.y / mag;
 
-			m_FiringDirection.x = xnorm;
-			m_FiringDirection.y = ynorm;
+			m_FiringDirection.x = -xnorm;
+			m_FiringDirection.y = -ynorm;
 
 			break;
 		}
