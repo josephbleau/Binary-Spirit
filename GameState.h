@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMESTATE_H
+#define GAMESTATE_H
 
 #include <SFML/Graphics.hpp>
 
@@ -26,3 +27,5 @@ public:
 protected: 
 	GameState(){}
 };
+
+#endif

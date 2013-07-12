@@ -1,3 +1,6 @@
+#ifndef MISCUTILS_H
+#define MISCUTILS_H
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,3 +18,5 @@ namespace MiscUtils
 	void unset_flag(int flag, int& bits);
 	void fill_rect(sf::Image& img, const sf::FloatRect& rect, sf::Color color = sf::Color::Black);
 }
+
+#endif

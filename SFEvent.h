@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SFEVENT_H
+#define SFEVENT_H
 
 #include <SFML/Graphics.hpp>
 #include "GameEvent.h"
@@ -20,3 +21,5 @@ public:
 
 	sf::Event* getEvent(){ return m_Event; }
 };
+
+#endif

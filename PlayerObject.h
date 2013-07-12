@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYEROBJECT_H
+#define PLAYEROBJECT_H
 
 #include "AnimatedObject.h"
 #include "ProjectileObject.h"
@@ -35,3 +36,5 @@ public:
 
 	sf::Vector2f getReticuleVector() const;
 };
+
+#endif

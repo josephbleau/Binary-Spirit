@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENTDISPATCHER_H
+#define EVENTDISPATCHER_H
 
 #include <vector>
 
@@ -19,3 +20,5 @@ public:
 	EventDispatcher();
 	~EventDispatcher();
 };
+
+#endif

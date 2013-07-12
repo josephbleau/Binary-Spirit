@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LITGAMEOBJECT_H
+#define LITGAMEOBJECT_H
 
 #include "LightSource.h"
 
@@ -13,3 +14,5 @@ public:
 
 	void updateLightLocation(int x, int y);
 };
+
+#endif

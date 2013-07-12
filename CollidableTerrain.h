@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLLIDABLETERRAIN_H
+#define COLLIDABLETERRAIN_H
 
 #include <SFML/Graphics.hpp>
 
@@ -26,3 +27,5 @@ public:
 		m_Sloped = 0;
 	}
 };
+
+#endif

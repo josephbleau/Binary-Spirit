@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIGHTSOURCE_H
+#define LIGHTSOURCE_H
 
 #include <SFML/Graphics.hpp>
 
@@ -40,3 +41,5 @@ public:
 	LightSource(sf::IntRect rect, sf::Color color, LightSourceType::Type type);
 	~LightSource();
 };
+
+#endif

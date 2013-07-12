@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEOBJECTTERRAINCOLLISION_H
+#define GAMEOBJECTTERRAINCOLLISION_H
 
 #include "GameEvent.h"
 #include "GameObject.h"
@@ -19,3 +20,5 @@ public:
 
 	~GameObjectTerrainCollision(){}
 };
+
+#endif

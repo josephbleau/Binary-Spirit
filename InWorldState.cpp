@@ -33,6 +33,7 @@ void InWorldState::init(std::string map_name)
 {
 	registerListener(this);
 	m_GameLevel->init((EventDispatcher*) this, map_name);
+	m_Camera.setDispatcher((EventDispatcher*) this);
 	m_Camera.SetWorldSize(m_GameLevel->getMapWidth(), m_GameLevel->getMapHeight());
 	m_Player->init((EventDispatcher*) this, m_GameLevel);
 

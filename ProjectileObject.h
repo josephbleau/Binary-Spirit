@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROJECTILEOBJECT_H
+#define PROJECTILEOBJECT_H
 
 #include "AnimatedObject.h"
 #include "LitGameObject.h"
@@ -30,3 +31,5 @@ public:
 	void init(EventDispatcher* dispatcher, GameLevel* game_level);
 	void notify(GameEvent* event);
 };
+
+#endif

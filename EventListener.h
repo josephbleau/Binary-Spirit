@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENTLISTENER_H
+#define EVENTLISTENER_H
 
 class GameEvent;
 class EventDispatcher;
@@ -17,3 +18,5 @@ public:
 	EventListener();
 	~EventListener();
 };
+
+#endif

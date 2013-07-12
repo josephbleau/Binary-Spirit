@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIGHTMANAGER_H
+#define LIGHTMANAGER_H
 
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -26,3 +27,5 @@ public:
 	void update(float tick_ms);
 	void render(int x, int y);
 };
+
+#endif

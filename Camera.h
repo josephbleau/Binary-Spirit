@@ -1,10 +1,14 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <SFML/Graphics.hpp>
 
-class GameObject;
+#include "EventListener.h"
 
-class Camera
+class GameObject;
+class GameEvent;
+
+class Camera : public EventListener
 {
 private:
 	bool m_IsObjectLocked;
@@ -47,4 +51,8 @@ public:
 	void SetWorldSize(float x, float y);
 	
 	void Update(float delta = 0.0f);
+
+	void notify(GameEvent* event);
 };
+
+#endif

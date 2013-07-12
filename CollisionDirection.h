@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLLISIONDIRECTION_H
+#define COLLISIONDIRECTION_H
 
 namespace CollisionSide
 {
@@ -9,3 +10,5 @@ namespace Axis
 {
 	enum Axis{ X, Y, Z };
 };
+
+#endif

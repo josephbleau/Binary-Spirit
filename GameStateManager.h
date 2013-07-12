@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMESTATEMANAGER_H
+#define GAMESTATEMANAGER_H
 
 #include <vector>
 
@@ -29,3 +30,5 @@ public:
 
 	GameState* createState(GameStateType::Type type);
 };
+
+#endif

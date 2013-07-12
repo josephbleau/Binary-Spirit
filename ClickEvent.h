@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CLICKEVENT_H
+#define CLICKEVENT_H
 
 #include <SFML/Graphics.hpp>
 
@@ -15,3 +16,5 @@ public:
 
 	sf::Vector2i getPosition(){ return m_Position; }
 };
+
+#endif

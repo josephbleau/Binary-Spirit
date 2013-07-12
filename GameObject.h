@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
 #include <SFML/Graphics.hpp>
 
@@ -72,3 +73,5 @@ public:
 	GameObject();
 	virtual ~GameObject();
 };
+
+#endif

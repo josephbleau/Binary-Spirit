@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ANIMATEDOBJECT_H
+#define ANIMATEDOBJECT_H
 
 #include "GameObject.h"
 #include "GameEvent.h"
@@ -27,3 +28,5 @@ public:
 	virtual void update(float tick_ms, GameLevel* game_level) = 0;
 	virtual void notify(GameEvent* e) = 0;
 };
+
+#endif

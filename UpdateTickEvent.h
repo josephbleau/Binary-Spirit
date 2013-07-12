@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UPDATETICKEVENT_H
+#define UPDATETICKEVENT_H
 
 #include "GameEvent.h"
 
@@ -12,3 +13,5 @@ public:
 
 	float getDelta(){ return m_Delta; }
 };
+
+#endif

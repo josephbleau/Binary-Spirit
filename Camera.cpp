@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 #include "GameObject.h"
-
-#include <iostream>
+#include "ResourceLocator.h"
+#include "SFEvent.h"
 
 Camera::Camera( sf::Vector2u screenSize, GameObject* trackedObject)
 	: m_IsObjectLocked(false)
@@ -176,4 +176,16 @@ sf::Vector2f Camera::GetPosition() const
 sf::Vector2f Camera::GetSize() const
 {
 	return m_ScreenSize;
+}
+
+void Camera::notify(GameEvent* event)
+{
+	if( event->getEventType() == Event::EVENT_SFEVENT )
+	{
+		sf::Event& e = *((SFEvent*)event)->getEvent();
+		if(e.type == sf::Event::Resized)
+		{
+
+		}
+	}
 }

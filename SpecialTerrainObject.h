@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPECIALTERRAINOBJECT_H
+#define SPECIALTERRAINOBJECT_H
 
 #include <SFML/Graphics.hpp>
 
@@ -30,3 +31,5 @@ public:
 	void renderAt(const Camera& camera, int brightness);
 	void renderAtTrueLocation();
 };
+
+#endif

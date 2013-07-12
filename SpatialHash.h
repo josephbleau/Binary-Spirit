@@ -5,7 +5,8 @@
 // to be divided into buckets for processing by their relative Spatial distances.
 ////////////////////
 
-#pragma once
+#ifndef SPATIALHASH_H
+#define SPATIALHASH_H
 
 #include <algorithm>
 #include <vector>
@@ -141,3 +142,5 @@ SpatialHash<T>::SpatialHash(float grid_width, float grid_height, int horiz_divis
 		}
 	}
 }
+
+#endif

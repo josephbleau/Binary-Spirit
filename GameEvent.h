@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEEVENT_H
+#define GAMEEVENT_H
 
 namespace Event
 {
@@ -25,3 +26,5 @@ public:
 	Event::Type getEventType();
 
 };
+
+#endif

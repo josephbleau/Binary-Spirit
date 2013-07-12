@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROJECTILEFIREDEVENT_H
+#define PROJECTILEFIREDEVENT_H
 
 #include "GameEvent.h"
 #include "GameObject.h"
@@ -19,3 +20,5 @@ public:
 
 	~ProjectileFiredEvent(){}
 };
+
+#endif

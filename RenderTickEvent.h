@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERTICKEVENT_H
+#define RENDERTICKEVENT_H
 
 #include "GameEvent.h"
 
@@ -10,3 +11,5 @@ public:
 	RenderTickEvent() : GameEvent(Event::EVENT_RENDER){}
 	~RenderTickEvent(){}
 };
+
+#endif

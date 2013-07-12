@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RESOURCELOCATOR_H
+#define RESOURCELOCATOR_H
 
 #include <SFML/Graphics.hpp>
 #include <TmxParser/Tmx.h>
@@ -44,3 +45,5 @@ public:
 	static sf::Texture* requestMapTexture(std::string identifier, int tileid);
 	static sf::Texture* requestMapTexture(Tmx::Map* map, int tileid);
 };
+
+#endif

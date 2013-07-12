@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMELEVEL_H
+#define GAMELEVEL_H
 
 #include <TmxParser/Tmx.h>
 #include <SFML/Graphics.hpp>
@@ -81,3 +82,5 @@ public:
 	GameLevel();
 	~GameLevel();
 };
+
+#endif

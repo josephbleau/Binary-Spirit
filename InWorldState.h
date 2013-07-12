@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INWORLDSTATE_H
+#define INWORLDSTATE_H
 
 #include "GameState.h"
 #include <TmxParser/Tmx.h>
@@ -37,3 +38,5 @@ public:
 	InWorldState();
 	~InWorldState();
 };
+
+#endif
