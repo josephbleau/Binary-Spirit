@@ -420,36 +420,48 @@ bool GameLevel::resolveCollisionWithSloped(GameObject* obj, CollidableTerrain* t
 
 // RENDER / UPDATE / NOTIFY
 // ----------------------------------------------------------
-void GameLevel::renderLayerByName(std::string layer_name, sf::IntRect camera_bounds)
+void GameLevel::renderLayerByName(std::string layer_name, const Camera& camera)
 {
+	// Sprite used for rendering.
 	sf::Sprite draw_me;
 	draw_me.setColor(sf::Color(m_LightLevel,m_LightLevel,m_LightLevel,255));
 
 	int tile_w = m_Map->GetTileWidth();
 	int tile_h = m_Map->GetTileHeight();
 
-	int x = -camera_bounds.left;
-	int y = -camera_bounds.top;
-	camera_bounds.left /= tile_w;
-	camera_bounds.top /= tile_h;
-	camera_bounds.width /= tile_w;
-	camera_bounds.height /= tile_h;
-	camera_bounds.height+=2;
-	camera_bounds.width+=2;
+	const sf::Vector2f& cameraPosition = camera.GetPosition();
+	const sf::Vector2f& cameraSize = camera.GetSize();
+	int cameraRightEdge = cameraPosition.x + cameraSize.x;
+	int cameraBottomEdge = cameraPosition.y + cameraSize.y;
+
+	// Tile boundary is used to determine the specific indices of tiles that should
+	// be visible within our camera boundary. Width and height are used as if they
+	// were actually 'right' and 'bottom.'
+	sf::IntRect tileBoundary;
+	tileBoundary.left = cameraPosition.x / tile_w - 1;
+	tileBoundary.width = cameraRightEdge / tile_w + 1;
+	tileBoundary.top = cameraPosition.y / tile_h - 1;
+	tileBoundary.height = cameraBottomEdge / tile_h + 1;
 
 	sf::Texture* tile_tex = NULL;
 	int last_tiles_id = 0;
 
+	// Iterate each layer in the map file looking for the layer
+	// we're trying to render (as passed by layer_name)
 	for(size_t i = 0; i < m_Map->GetNumLayers();  i++)
 	{
+		// Current layer
 		const Tmx::Layer* layer = m_Map->GetLayer(i);
 
+		// Not our layer? Next.
 		if(layer->GetName() != layer_name)
 			continue;
-
-		for(int tx = camera_bounds.left; tx < camera_bounds.left + camera_bounds.width; tx++)
+	
+		// We must have found our layer, render each tile, but only
+		// render the tiles that will be visible to the screen.
+		for(int tx = tileBoundary.left; tx < tileBoundary.width; ++tx)
 		{
-			for(int ty = camera_bounds.top; ty < camera_bounds.top + camera_bounds.height; ty++)
+			for(int ty = tileBoundary.top; ty < tileBoundary.height; ++ty)
 			{ 
 				if(tx >= m_Map->GetWidth() ||
 					ty >= m_Map->GetHeight())
@@ -475,11 +487,10 @@ void GameLevel::renderLayerByName(std::string layer_name, sf::IntRect camera_bou
 					last_tiles_id = this_tiles_id;
 				}
 
-
 				if(tile_tex)
 				{   
 					draw_me.setTexture(*tile_tex);
-					draw_me.setPosition((float)(x + tx * tile_w),(float)(y + ty * tile_h));
+					draw_me.setPosition((float)(-cameraPosition.x + tx * tile_w),(float)(-cameraPosition.y + ty * tile_h));
 
 					ResourceLocator::getDrawSurface()->draw(draw_me);    
 				}
@@ -488,21 +499,9 @@ void GameLevel::renderLayerByName(std::string layer_name, sf::IntRect camera_bou
 	}
 }
 
-void GameLevel::renderLightMap(sf::IntRect camera_bounds)
+void GameLevel::renderLightMap(const Camera& camera)
 {
-	int tile_w = m_Map->GetTileWidth();
-	int tile_h = m_Map->GetTileHeight();
-
-	int x = -camera_bounds.left;
-	int y = -camera_bounds.top;
-	camera_bounds.left /= tile_w;
-	camera_bounds.top /= tile_h;
-	camera_bounds.width /= tile_w;
-	camera_bounds.height /= tile_h;
-	camera_bounds.height+=2;
-	camera_bounds.width+=2;
-
-	m_LightManager.render(x, y);
+	m_LightManager.render(-camera.GetPosition().x, -camera.GetPosition().y);
 }
 
 void GameLevel::renderDebugCollisionMapAt(int x, int y)

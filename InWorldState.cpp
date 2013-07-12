@@ -17,18 +17,18 @@
 #include "MiscUtils.h"
 
 InWorldState::InWorldState()
+	: m_GameLevel(new GameLevel())
+	, m_Player(new PlayerObject())
+	, m_GameObjects()
+	, m_StaticCollidables()
+	, m_Camera(0, 0, ResourceLocator::getDrawSurfaceSize().x, ResourceLocator::getDrawSurfaceSize().y)
+	, m_RealCamera(ResourceLocator::getDrawSurfaceSize())
 {
-	m_GameLevel = new GameLevel();
-	m_Player = new PlayerObject();
-	m_Camera.top = 0;
-	m_Camera.left = 0;
-	m_Camera.width = 1024;
-	m_Camera.height = 768;
+	m_RealCamera.SetTrackedObject(m_Player);
 }
 
 InWorldState::~InWorldState()
-{
-}
+{}
 
 void InWorldState::init(std::string map_name)
 {
@@ -70,6 +70,13 @@ void InWorldState::handleEvents(sf::Event* event)
 		{
 			m_GameLevel->setDebugFlag(LevelDebug::kDFLAG_SHOWCOLLISION);
 		}
+		else if( event->key.code == sf::Keyboard::F2 )
+		{
+			if( m_RealCamera.IsFreeLookOn() )
+				m_RealCamera.DisableFreeLook();
+			else
+				m_RealCamera.EnableFreeLook();
+		}
 	}
 }
 
@@ -81,48 +88,34 @@ void InWorldState::update(float tick_ms)
 	}  
 
 	m_Player->update(tick_ms, m_GameLevel);
-
-	m_Camera.left = (int)(m_Player->getLocation().x + m_Camera.width/2);
-	m_Camera.top = (int) m_Player->getLocation().y;
-
 	for(size_t i = 0; i < m_GameObjects.size(); i++)
 	{
 		m_GameObjects[i]->update(tick_ms, m_GameLevel);
 	}
+
+	m_RealCamera.Update(tick_ms);
 }
 
 void InWorldState::render()
 {
-	sf::IntRect camera_offset;
-	int magic_width = m_GameLevel->getMapWidth() - m_Camera.width;
-	int magic_height = m_GameLevel->getMapHeight() - m_Camera.height;
+	// Render background layer, player will pass in front of
+	// anything rendered in this layer.
+	m_GameLevel->renderLayerByName("Background", m_RealCamera);
 
-	camera_offset.left = MiscUtils::max(0, m_Camera.left - m_Camera.width);
-	camera_offset.left = MiscUtils::min(camera_offset.left, magic_width);
-	camera_offset.top = MiscUtils::max(0, m_Camera.top - m_Camera.height/2-1);
-	camera_offset.top = MiscUtils::min(camera_offset.top, magic_height);
-
-	camera_offset.width = m_Camera.width;
-	camera_offset.height = m_Camera.height;
-
-	m_GameLevel->renderLayerByName("Background", camera_offset);
-
-	sf::Vector2i player_offset;
-
-	player_offset.x = (int) m_Player->getLocation().x - camera_offset.left;
-	player_offset.y = (int) m_Player->getLocation().y - camera_offset.top;
-
-	m_Player->renderAt(player_offset.x, player_offset.y, m_GameLevel->getLightLevel());
+	// Render player and all game objects.
+	m_Player->renderAt(m_RealCamera, m_GameLevel->getLightLevel());
 
 	for(size_t i = 0; i < m_GameObjects.size(); i++)
 	{
-		int object_offset_x = (int) (m_GameObjects[i]->getLocation().x - camera_offset.left);
-		int object_offset_y = (int) (m_GameObjects[i]->getLocation().y - camera_offset.top);
-		m_GameObjects[i]->renderAt(object_offset_x, object_offset_y, 255);
+		m_GameObjects[i]->renderAt(m_RealCamera, 255);
 	}
 
-	m_GameLevel->renderLayerByName("Foreground", camera_offset);
-	m_GameLevel->renderLightMap(camera_offset);
+	// Render foreground layer, player will pass behind
+	// anything rendered in this layer.
+	m_GameLevel->renderLayerByName("Foreground", m_RealCamera);
+
+	// Lights will render last and be on top of all layers.
+	m_GameLevel->renderLightMap(m_RealCamera);
 }
 
 void InWorldState::onLoad()
@@ -161,14 +154,14 @@ void InWorldState::notify(GameEvent* event)
 				int xpos = m_Camera.left - (sf::Mouse::getPosition(renderWindow).x - 1024/2);
 				int ypos = m_Camera.top - (sf::Mouse::getPosition(renderWindow).y - 768/2);
 
-				ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC );
-				projectile->init(getDispatcher(), m_GameLevel);
-				projectile->setLocation(xpos, ypos);
+				//ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC );
+				//projectile->init(getDispatcher(), m_GameLevel);
+				//projectile->setLocation(xpos, ypos);
 
-				projectile->setVelocity( 0, 0 );
+				//projectile->setVelocity( 0, 0 );
 
-				ProjectileFiredEvent e(projectile);
-				getDispatcher()->dispatchEvent(&e);
+				//ProjectileFiredEvent e(projectile);
+				//getDispatcher()->dispatchEvent(&e);
 
 				//ClickEvent clickEvent(xpos, ypos);
 				//dispatchEvent(&clickEvent);

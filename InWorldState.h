@@ -3,6 +3,8 @@
 #include "GameState.h"
 #include <TmxParser/Tmx.h>
 
+#include "Camera.h"
+
 class GameLevel;
 class GameObject;
 class PlayerObject;
@@ -16,6 +18,7 @@ private:
 	std::vector<sf::IntRect> m_StaticCollidables;
 
 	sf::IntRect m_Camera;
+	Camera m_RealCamera; // rename when old camera is replaced
 
 public:
 	void registerObject(GameObject* game_object);

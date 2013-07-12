@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 		}
 
 		gsm.getCurrentState()->update(delta_ms);
-		//app.clear();
+		app.clear( sf::Color::Black );
 		gsm.getCurrentState()->render();
 		app.display();
 	}

@@ -1,5 +1,6 @@
 #include "PlayerObject.h"
 
+#include "Camera.h"
 #include "GameEvent.h"
 #include "EventDispatcher.h"
 #include "ResourceLocator.h"
@@ -38,15 +39,17 @@ PlayerObject::~PlayerObject()
 
 }
 
-void PlayerObject::renderAt(int x, int y, int brightness)
+void PlayerObject::renderAt(const Camera& camera, int brightness)
 {
 	if(getCurrentAnimation())
 	{
 		int texture_w = m_Sprite.getTextureRect().width;
 		int texture_h = m_Sprite.getTextureRect().height;
+		float offset_x = m_Location.x - camera.GetPosition().x;
+		float offset_y = m_Location.y - camera.GetPosition().y;
 
 		m_Sprite.setColor(sf::Color(brightness, brightness, brightness, 255));
-		m_Sprite.setPosition((float)x,(float)y);
+		m_Sprite.setPosition(offset_x, offset_y);
 
 		if(m_XFlipped)
 		{
@@ -222,6 +225,7 @@ void PlayerObject::notify(GameEvent* event)
 			{
 				int xpos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).x - 1024/2;
 				int ypos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).y - 768/2;
+
 				if(xpos < 0){
 					m_MouseLookLeft = true;
 				}

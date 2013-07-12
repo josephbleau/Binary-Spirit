@@ -26,7 +26,7 @@ public:
 	PlayerObject();
 	~PlayerObject();
 
-	void renderAt(int x, int y, int brightness = 255);
+	void renderAt(const Camera& camera, int brightness = 255);
 	void renderAtTrueLocation();
 
 	void update(float tick_ms, GameLevel* level);

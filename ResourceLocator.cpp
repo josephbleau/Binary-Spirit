@@ -39,6 +39,11 @@ sf::RenderWindow* ResourceLocator::getDrawSurface()
 	return ResourceLocator::m_DrawSurface;
 }
 
+sf::Vector2u ResourceLocator::getDrawSurfaceSize()
+{
+	return ResourceLocator::m_DrawSurface->getSize();
+}
+
 void ResourceLocator::loadMapResource(std::string identifier, std::string path)
 {
 	if(ResourceLocator::m_Textures.count(identifier) == 0)

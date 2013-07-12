@@ -27,7 +27,7 @@ void SpecialTerrainObject::update(float tick_ms, GameLevel* game_level)
 {
 }
 
-void SpecialTerrainObject::renderAt(int x, int y, int brightness)
+void SpecialTerrainObject::renderAt(const Camera& camera, int brightness)
 {
 }
 

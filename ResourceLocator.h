@@ -26,6 +26,7 @@ private:
 public:
 	static void provideDrawSurface(sf::RenderWindow* draw_surface);
 	static sf::RenderWindow* getDrawSurface();
+	static sf::Vector2u getDrawSurfaceSize();
 
 	static void loadMapResource(std::string identifier, std::string path);
 	static void loadTextureResource(std::string identifier, std::string path);

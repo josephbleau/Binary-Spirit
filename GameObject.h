@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Camera.h"
 #include "EventListener.h"
 
 class GameLevel;
@@ -65,7 +66,7 @@ public:
 
 	virtual void update(float tick_ms, GameLevel* game_level) = 0;
 	virtual void notify(GameEvent* event) = 0;
-	virtual void renderAt(int x, int y, int brightness) = 0;
+	virtual void renderAt(const Camera& camera, int brightness) = 0;
 	virtual void renderAtTrueLocation() = 0;
 
 	GameObject();

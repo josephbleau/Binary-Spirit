@@ -27,6 +27,6 @@ public:
 
 	void update(float tick_ms, GameLevel* game_level);
 	void notify(GameEvent* event);
-	void renderAt(int x, int y, int brightness);
+	void renderAt(const Camera& camera, int brightness);
 	void renderAtTrueLocation();
 };

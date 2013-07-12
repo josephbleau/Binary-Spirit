@@ -24,10 +24,12 @@ ProjectileObject::~ProjectileObject()
 }
 
 
-void ProjectileObject::renderAt(int x, int y, int brightness)
+void ProjectileObject::renderAt(const Camera& camera, int brightness)
 {
 	m_Sprite.setColor(sf::Color(brightness, brightness, brightness, 255));
-	m_Sprite.setPosition((float)x,(float)y);
+	float offset_x = m_Location.x - camera.GetPosition().x;
+	float offset_y = m_Location.y - camera.GetPosition().y;
+	m_Sprite.setPosition(offset_x,offset_y);
 	getCurrentAnimation()->render();
 }
 

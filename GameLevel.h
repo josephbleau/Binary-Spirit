@@ -3,13 +3,12 @@
 #include <TmxParser/Tmx.h>
 #include <SFML/Graphics.hpp>
 
-#include "EventListener.h"
-#include "CollisionDirection.h"
-#include "LightManager.h"
-
-#include "SpatialHash.h"
-
+#include "Camera.h"
 #include "CollidableTerrain.h"
+#include "CollisionDirection.h"
+#include "EventListener.h"
+#include "LightManager.h"
+#include "SpatialHash.h"
 
 class GameEvent;
 class GameObject;
@@ -71,8 +70,8 @@ public:
 	void init(EventDispatcher* dispatcher, std::string map_name);
 
 	void renderAt(int x = 0, int y = 0);
-	void renderLayerByName(std::string layer_name, sf::IntRect camera_bounds);
-	void renderLightMap(sf::IntRect camera_bounds);
+	void renderLayerByName(std::string layer_name, const Camera& camera);
+	void renderLightMap(const Camera& camera);
 
 	void notify(GameEvent* event);
 
