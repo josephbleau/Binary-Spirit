@@ -221,10 +221,14 @@ void PlayerObject::notify(GameEvent* event)
 	case Event::EVENT_SFEVENT:
 		{
 			sf::Event* sfevent = ((SFEvent*) event)->getEvent();
+
+			int halfScreenWidth = ResourceLocator::getDrawSurfaceSize().x/2;
+			int halfScreenHeight = ResourceLocator::getDrawSurfaceSize().y/2;
+
 			if(sfevent->type == sf::Event::MouseMoved)
 			{
-				int xpos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).x - 1024/2;
-				int ypos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).y - 768/2;
+				int xpos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).x - halfScreenWidth;
+				int ypos = sf::Mouse::getPosition(*ResourceLocator::getDrawSurface()).y - halfScreenHeight;
 
 				if(xpos < 0){
 					m_MouseLookLeft = true;
