@@ -36,6 +36,8 @@ public:
 
 	void notify(GameEvent* event);
 
+	sf::Vector2f getPlayerLocation() const;
+
 	InWorldState();
 	~InWorldState();
 };

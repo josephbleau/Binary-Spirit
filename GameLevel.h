@@ -83,6 +83,8 @@ public:
 
 	const std::vector<sf::IntRect>& getStaticCollidables();
 	const sf::Vector2f& getPlayerSpawnPoint();
+
+	sf::Vector2f getPlayerLocation() const;
 	bool isLocationInLevel( const sf::Vector2f& location ) const;
 };
 

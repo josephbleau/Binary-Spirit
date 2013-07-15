@@ -175,3 +175,8 @@ void InWorldState::notify(GameEvent* event)
 		}
 	}
 }
+
+sf::Vector2f InWorldState::getPlayerLocation() const
+{
+	return m_Player.getLocation();
+}

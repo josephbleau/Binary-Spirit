@@ -31,10 +31,10 @@ public:
 	void nudge(float x, float y);
 
 	void setLocation(float x, float y);
-	sf::Vector2f getLocation();
+	sf::Vector2f getLocation() const;
 
 	void setVelocity(float x, float y);
-	sf::Vector2f getVelocity();
+	sf::Vector2f getVelocity() const;
 
 	void addVelocity(float x, float y);
 	void deductVelocity(float x, float y);

@@ -129,7 +129,7 @@ void GameObject::setLocation(float x, float y)
 	m_Location.y = y;
 }
 
-sf::Vector2f GameObject::getLocation()
+sf::Vector2f GameObject::getLocation() const
 {
 	return m_Location;
 }
@@ -140,7 +140,7 @@ void GameObject::setVelocity(float x, float y)
 	m_Velocity.y = y;
 }
 
-sf::Vector2f GameObject::getVelocity()
+sf::Vector2f GameObject::getVelocity() const
 {
 	return m_Velocity;
 }

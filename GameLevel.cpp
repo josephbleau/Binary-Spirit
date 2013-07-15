@@ -578,6 +578,11 @@ LightManager* GameLevel::getLightManager()
 	return &m_LightManager;
 }
 
+sf::Vector2f GameLevel::getPlayerLocation() const
+{
+	return m_WorldState->getPlayerLocation();
+}
+
 bool GameLevel::isLocationInLevel( const sf::Vector2f& location ) const
 {
 	return location.x < 0 ||

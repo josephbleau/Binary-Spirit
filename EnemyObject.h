@@ -2,6 +2,8 @@
 #define ENEMYOBJECT_H
 
 
+#include <functional>
+
 #include "AnimatedObject.h"
 #include "TmxParser\TmxObject.h"
 
@@ -12,6 +14,9 @@ class EnemyObject : AnimatedObject
 {
 private:
 	std::string m_Name;
+	std::function<void(float, GameLevel*)> m_EnemyBehavior;
+
+	sf::Clock m_Clock;
 
 public:
 	EnemyObject(Tmx::Object* description);
