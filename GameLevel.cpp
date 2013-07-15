@@ -477,8 +477,12 @@ void GameLevel::renderLayerByName(std::string layer_name, const Camera& camera)
 		// Current layer
 		const Tmx::Layer* layer = m_Map->GetLayer(i);
 
-		// Not our layer? Next.
-		if(layer->GetName() != layer_name)
+		// When "Background" is passed, draw every layer except for collision and foreground.
+		// I know this is crap, but for now this is how I'm going to allow the multiple background
+		// layers to be named anything the editor wants them to be.
+		if(layer_name == "Background" && layer->GetName() != "Collision" && layer->GetName() != "Foreground")
+		{}
+		else if(layer->GetName() != layer_name)
 			continue;
 	
 		// We must have found our layer, render each tile, but only
