@@ -27,11 +27,11 @@ EnemyObject::EnemyObject(Tmx::Object* description)
 }
 
 EnemyObject::~EnemyObject()
-{}
+{}	
 
 void EnemyObject::update(float tick_ms, GameLevel* game_level)
 {
-	//getCurrentAnimation()->update(tick_ms);
+	getCurrentAnimation()->update(tick_ms);
 }
 
 void EnemyObject::init(EventDispatcher* dispatcher, GameLevel* game_level)

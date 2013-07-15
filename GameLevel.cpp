@@ -126,8 +126,14 @@ void GameLevel::parseCollisionLayer(const Tmx::Layer* layer)
 				const Tmx::Tileset *tileset = m_Map->GetTileset(tileset_i);
 				const Tmx::PropertySet& properties = tileset->GetTile(tile.id)->GetProperties();
 
-				int onesided = properties.GetNumericProperty("onesided");
-				int slope = properties.GetNumericProperty("slope");
+				int onesided = 0; 
+				int slope = 0;
+				
+				if( properties.HasProperty("onesided" ) )
+					onesided = properties.GetNumericProperty("onesided");
+
+				if( properties.HasProperty("slope" ) )
+					slope = properties.GetNumericProperty("slope");
 
 				sf::FloatRect rect;
 				rect.left = (float) x * tile_w;
@@ -226,10 +232,19 @@ void GameLevel::parseMapObject(Tmx::Object* object)
 			int w = object->GetWidth();
 			int h = object->GetHeight();
 
-			sf::Uint8 r = object->GetProperties().GetNumericProperty("r");
-			sf::Uint8 g = object->GetProperties().GetNumericProperty("g");
-			sf::Uint8 b = object->GetProperties().GetNumericProperty("b");
-			sf::Uint8 a = object->GetProperties().GetNumericProperty("brightness");
+			sf::Uint8 r = 0;
+			sf::Uint8 g = 0;
+			sf::Uint8 b = 0;
+			sf::Uint8 a = 255;
+
+			if( object->GetProperties().HasProperty("r") )
+				r = object->GetProperties().GetNumericProperty("r");
+			if( object->GetProperties().HasProperty("g") )
+				g = object->GetProperties().GetNumericProperty("g");
+			if( object->GetProperties().HasProperty("b") )
+				b = object->GetProperties().GetNumericProperty("b");
+			if( object->GetProperties().HasProperty("brightness") )
+				a = object->GetProperties().GetNumericProperty("brightness");
 
 			// If somebody leaves brightness property blank it will be set to zero, we want the default brightness to be max if it's not set
 			// Although this is admittedly counter-intuitive, and I apologize if you are now reading this comment cursing at me.

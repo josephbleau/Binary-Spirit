@@ -98,6 +98,11 @@ std::vector<T*> SpatialHash<T>::getItems(float x, float y, float w, float h)
 			unsigned int ix = (unsigned int) (lx / m_CellWidth);
 			unsigned int iy = (unsigned int) (ly / m_CellHeight);
 
+			if(ix >= m_Grid.size())
+				continue;
+			if(iy >= m_Grid[ix].size())
+				continue;
+
 			ret.insert(ret.end(), m_Grid[ix][iy].begin(), m_Grid[ix][iy].end());
 		}
 	}
