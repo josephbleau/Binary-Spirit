@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "GameLevel.h"
 #include "EventDispatcher.h"
+#include "GameObjectTerrainCollision.h"
 
 #include "GameObjectTerrainCollision.h"
 
@@ -28,7 +29,16 @@ void ProjectileObject::update(float tick_ms, GameLevel* level)
 	m_Sprite.setPosition(m_Location);
 	getCurrentAnimation()->update(tick_ms);
 	updateLightLocation((int)getLocation().x,(int) getLocation().y);
-	updateLocation(tick_ms, level, true); // has to be last, can cause ourselves to be deleted (oh my :o)
+
+	if( m_GameLevel->isLocationInLevel( m_Location ) )
+	{
+		GameObjectTerrainCollision gotc(this);
+		m_Dispatcher->dispatchEvent(&gotc);
+	}
+	else
+	{
+		updateLocation(tick_ms, level, true); // has to be last, can cause ourselves to be deleted (oh my :o)
+	}
 }
 
 void ProjectileObject::init(EventDispatcher* dispatcher, GameLevel* game_level)

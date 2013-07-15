@@ -67,8 +67,8 @@ public:
 
 	LightManager* getLightManager();
 
-	int getMapHeight();
-	int getMapWidth();
+	int getMapHeight() const;
+	int getMapWidth() const;
 
 	std::vector<CollidableTerrain*> getNearbyCollidables(sf::FloatRect rect);
 	bool resolveCollision(GameObject* obj, CollidableTerrain* collidable, Axis::Axis axis, float xdelta, float ydelta);
@@ -83,6 +83,7 @@ public:
 
 	const std::vector<sf::IntRect>& getStaticCollidables();
 	const sf::Vector2f& getPlayerSpawnPoint();
+	bool isLocationInLevel( const sf::Vector2f& location ) const;
 };
 
 #endif

@@ -83,6 +83,14 @@ void GameObject::updateLocation(float tick_ms, GameLevel* level, bool announce_c
 		}
 
 		setLanded(landed);
+
+		// Default action for an item if it goes out of the level
+		// is to set its velocity to nil
+		if( m_GameLevel->isLocationInLevel( m_Location ) )
+		{
+			m_Velocity.x = 0;
+			m_Velocity.y = 0;
+		}
 	}
 }
 

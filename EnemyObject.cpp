@@ -9,7 +9,7 @@
 EnemyObject::EnemyObject(Tmx::Object* description)
 {
 	std::string name = description->GetType();
-	std::cout << "\t\t" << name << "..." << std::endl;
+	std::cout << "" << name << std::endl;
 	const Tmx::PropertySet& properties = description->GetProperties();
 
 	if( properties.HasProperty("anim_idle") )

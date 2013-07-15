@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "GameEvent.h"
+#include "GameLevel.h"
 #include "EventDispatcher.h"
 #include "ResourceLocator.h"
 
@@ -128,6 +129,9 @@ void PlayerObject::update(float tick_ms, GameLevel* level)
 	updateLocation(tick_ms, level);
 	m_Sprite.setPosition(m_Location);
 	updateAnimation(tick_ms);
+
+	if( m_GameLevel->isLocationInLevel( m_Location ) )
+		m_Location = m_GameLevel->getPlayerSpawnPoint();
 }
 
 void PlayerObject::handleEvents(sf::Event* event)

@@ -264,7 +264,7 @@ void GameLevel::parseMapObject(Tmx::Object* object)
 		}
 		else if(object->GetName() == "enemy")
 		{
-			std::cout << "\tSpawning enemies" << std::endl;
+			std::cout << "\tSpawning enemy... ";
 
 			EnemyObject* enemy = new EnemyObject(object);
 			enemy->init((EventDispatcher*) m_WorldState, this);
@@ -277,12 +277,12 @@ void GameLevel::parseMapObject(Tmx::Object* object)
 	}
 }
 
-int GameLevel::getMapHeight()
+int GameLevel::getMapHeight() const
 {
 	return m_Map->GetHeight() * m_Map->GetTileHeight();
 }
 
-int GameLevel::getMapWidth()
+int GameLevel::getMapWidth() const
 {
 	return m_Map->GetWidth() * m_Map->GetTileWidth();
 }
@@ -576,4 +576,12 @@ void GameLevel::setLightLevel(int light_level)
 LightManager* GameLevel::getLightManager()
 {
 	return &m_LightManager;
+}
+
+bool GameLevel::isLocationInLevel( const sf::Vector2f& location ) const
+{
+	return location.x < 0 ||
+		   location.y < 0 ||
+		   (location.x > getMapWidth()) ||
+	       (location.y > getMapHeight());
 }
