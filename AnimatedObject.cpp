@@ -8,6 +8,9 @@ AnimatedObject::AnimatedObject()
 	m_CurrentAnimation = NULL;
 	m_XFlipped = false;
 	m_YFlipped = false;
+	m_Blinking = false;
+	m_Visible = true;
+	m_TimeBetweenBlinksInMs = 50;
 }
 
 AnimatedObject::~AnimatedObject()
@@ -62,7 +65,22 @@ Animation* AnimatedObject::getCurrentAnimation()
 
 void AnimatedObject::renderAt(const Camera& camera, int brightness)
 {
-	if(getCurrentAnimation())
+	if( m_Blinking )
+	{
+		if( m_CurrentBlink.getElapsedTime().asMilliseconds() > m_TimeBetweenBlinksInMs )
+		{
+			m_CurrentBlink.restart();
+			m_Visible = !m_Visible;
+		}
+
+		if( m_BlinkTimer.getElapsedTime().asMilliseconds() > m_TimeToBlink )
+		{
+			m_Blinking = false;
+			m_Visible = true;
+		}
+	}
+
+	if(m_Visible && getCurrentAnimation())
 	{
 		int texture_w = m_Sprite.getTextureRect().width;
 		int texture_h = m_Sprite.getTextureRect().height;
@@ -84,4 +102,12 @@ void AnimatedObject::renderAt(const Camera& camera, int brightness)
 			getCurrentAnimation()->render();
 		}
 	}
+}
+
+void AnimatedObject::blinkFor( sf::Int32 blinkTime )
+{
+	m_Blinking = true;
+	m_BlinkTimer.restart();
+	m_CurrentBlink.restart();
+	m_TimeToBlink = blinkTime;
 }

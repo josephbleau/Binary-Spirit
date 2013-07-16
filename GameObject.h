@@ -36,6 +36,7 @@ protected:
 
 	sf::Clock m_InvulnClock;
 	sf::Int32 m_TimeBetweenPainInMs;
+	
 
 public:
 	void nudge(float x, float y);

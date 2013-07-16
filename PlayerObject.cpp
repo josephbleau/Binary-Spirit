@@ -210,6 +210,7 @@ void PlayerObject::notify(GameEvent* event)
 				{
 					m_NoControlTimer.restart();
 					m_InvulnClock.restart();
+					blinkFor(1500);
 
 					if( m_MouseLookLeft )
 					{

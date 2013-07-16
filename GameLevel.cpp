@@ -462,6 +462,9 @@ bool GameLevel::resolveObjectCollision(GameObject* obj, Axis::Axis axis, float x
 	{
 		for( auto& object : m_WorldState->getObjects() )
 		{
+			if(object == obj)
+				continue;
+
 			if( colRect.intersects( object->getCollisionRect() ) )
 			{
 				colliding = true;
