@@ -72,6 +72,7 @@ public:
 
 	std::vector<CollidableTerrain*> getNearbyCollidables(sf::FloatRect rect);
 	bool resolveCollision(GameObject* obj, CollidableTerrain* collidable, Axis::Axis axis, float xdelta, float ydelta);
+	bool resolveObjectCollision(GameObject* obj, Axis::Axis axis, float xdelta, float ydelta);
 
 	void init(EventDispatcher* dispatcher, std::string map_name);
 

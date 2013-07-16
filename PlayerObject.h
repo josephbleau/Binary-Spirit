@@ -23,6 +23,9 @@ private:
 
 	ProjectileType::Type m_CurrentProjectileType;
 
+	sf::Clock m_NoControlTimer;
+	sf::Int32 m_OutOfControlTimeInMs;
+
 public:
 	PlayerObject();
 	~PlayerObject();

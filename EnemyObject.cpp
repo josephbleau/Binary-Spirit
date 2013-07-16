@@ -43,7 +43,7 @@ void EnemyObject::update(float tick_ms, GameLevel* game_level)
 	// enemy fires a projectile at the player.
 	m_EnemyBehavior = [this](float tick_ms, GameLevel* level) {
 		sf::Clock& clock = this->m_Clock;
-		sf::Int32 delayBetweenBulletsInMs = 250;
+		sf::Int32 delayBetweenBulletsInMs = 600;
 
 		if( clock.getElapsedTime().asMilliseconds() > delayBetweenBulletsInMs )
 		{
@@ -64,11 +64,11 @@ void EnemyObject::update(float tick_ms, GameLevel* game_level)
 
 		if(dist <= firingDistance)
 		{
-			ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC );
+			ProjectileObject* projectile = new ProjectileObject( ProjectileType::PROJECTILE_BASIC, CollidesWith::PLAYERS, this );
 			projectile->init(getDispatcher(), m_GameLevel);
 			projectile->setLocation(getLocation().x, getLocation().y);
 
-			projectile->setVelocity( -projectileHeading.x * 400, -projectileHeading.y * 400);
+			projectile->setVelocity( -projectileHeading.x * 300, -projectileHeading.y * 300);
 
 			ProjectileFiredEvent e(projectile);
 			this->getDispatcher()->dispatchEvent(&e);

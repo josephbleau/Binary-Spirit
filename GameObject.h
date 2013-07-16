@@ -8,6 +8,11 @@
 
 class GameLevel;
 
+namespace CollidesWith 
+{
+	enum Type{ NONE, ALL, OTHERS, PLAYERS };
+}
+
 class GameObject : public EventListener
 {
 protected:
@@ -26,6 +31,11 @@ protected:
 	sf::FloatRect m_CollisionRect;
 
 	GameLevel *m_GameLevel;
+
+	CollidesWith::Type m_CollidesWith;
+
+	sf::Clock m_InvulnClock;
+	sf::Int32 m_TimeBetweenPainInMs;
 
 public:
 	void nudge(float x, float y);
@@ -64,6 +74,8 @@ public:
 
 	void disableMovement();
 	void enableMovement();
+
+	CollidesWith::Type getCollisionType() const;
 
 	virtual void update(float tick_ms, GameLevel* game_level) = 0;
 	virtual void notify(GameEvent* event) = 0;

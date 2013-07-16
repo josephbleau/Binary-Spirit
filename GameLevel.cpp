@@ -6,6 +6,7 @@
 #include "ResourceLocator.h"
 #include "MiscUtils.h"
 #include "EventDispatcher.h"
+#include "EventObjectsColliding.h"
 #include "EnemyObject.h"
 #include "GameObject.h"
 #include "InWorldState.h"
@@ -440,6 +441,52 @@ bool GameLevel::resolveCollisionWithSloped(GameObject* obj, CollidableTerrain* t
 
 
 	return false;
+}
+
+bool GameLevel::resolveObjectCollision(GameObject* obj, Axis::Axis axis, float xdelta, float ydelta)
+{
+	sf::Vector2f newLocation( obj->getLocation() );
+
+	bool colliding = false;
+	GameObject* collidingWith = nullptr;
+
+	if( axis == Axis::X )
+		newLocation.x += xdelta;
+	if( axis == Axis::Y )
+		newLocation.y += ydelta;
+
+	sf::FloatRect colRect( newLocation.x, newLocation.y, obj->getCollisionRect().width, obj->getCollisionRect().height );
+
+	if( obj->getCollisionType() == CollidesWith::ALL ||
+		obj->getCollisionType() == CollidesWith::OTHERS )
+	{
+		for( auto& object : m_WorldState->getObjects() )
+		{
+			if( colRect.intersects( object->getCollisionRect() ) )
+			{
+				colliding = true;
+				collidingWith = object;
+				break;
+			}
+		}
+	}
+	else if( obj->getCollisionType() == CollidesWith::PLAYERS )
+	{
+		GameObject* player = m_WorldState->getPlayer();
+		if( colRect.intersects( player->getCollisionRect() ) )
+		{
+			colliding = true;
+			collidingWith = player;
+		}
+	}
+
+	if( colliding )
+	{
+		EventObjectsColliding e(obj, collidingWith);
+		m_Dispatcher->dispatchEvent(&e);
+	}
+
+	return colliding;
 }
 
 // RENDER / UPDATE / NOTIFY

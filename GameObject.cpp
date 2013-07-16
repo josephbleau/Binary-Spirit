@@ -19,6 +19,8 @@ GameObject::GameObject()
 	, m_FiringDirection(1,0)
 	, m_CollisionRect()
 	, m_GameLevel(nullptr)
+	, m_TimeBetweenPainInMs(2000)
+	, m_CollidesWith( CollidesWith::ALL )
 {}
 
 GameObject::~GameObject()
@@ -74,6 +76,14 @@ void GameObject::updateLocation(float tick_ms, GameLevel* level, bool announce_c
 		{
 			m_LastLocation.y = m_Location.y;
 			m_Location.y += delta_y;
+		}
+
+		if( m_CollidesWith != CollidesWith::NONE )
+		{
+			if( level->resolveObjectCollision( this, Axis::X, delta_x, 0 ) )
+				x_collided = true;
+			if( level->resolveObjectCollision( this, Axis::Y, 0, delta_y ) )
+				y_collided = true;
 		}
 
 		if(announce_collision && (y_collided || x_collided || m_OnSlope))
@@ -253,4 +263,9 @@ void GameObject::enableMovement()
 void GameObject::disableMovement()
 {
 	m_MovementEnabled = false;
+}
+
+CollidesWith::Type GameObject::getCollisionType() const
+{
+	return m_CollidesWith;
 }

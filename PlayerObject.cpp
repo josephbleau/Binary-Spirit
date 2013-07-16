@@ -13,6 +13,7 @@
 #include "UpdateTickEvent.h"
 #include "SFEvent.h"
 #include "ClickEvent.h"
+#include "EventObjectsColliding.h"
 
 
 #include <iostream>
@@ -26,6 +27,7 @@ PlayerObject::PlayerObject()
 	m_RunSpeed = 200;
 	m_MouseLookLeft = false;
 	m_CurrentProjectileType = ProjectileType::PROJECTILE_BASIC;
+	m_OutOfControlTimeInMs = 200;
 
 	sf::IntRect collision_rect;
 	collision_rect.left = 18;
@@ -73,57 +75,60 @@ void PlayerObject::updateAnimation(float tick_ms)
 
 void PlayerObject::update(float tick_ms, GameLevel* level)
 {
-	if((sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
-		sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ||
-		(!sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
+	if( m_NoControlTimer.getElapsedTime().asMilliseconds()  > m_OutOfControlTimeInMs )
 	{
-		setXVelocity(0);
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		setXVelocity((float) m_RunSpeed);
-	}
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		setXVelocity((float) (-1*m_RunSpeed));
-	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		m_IgnoringOneSidedPlatforms = true;
-	}
-	else
-	{
-		m_IgnoringOneSidedPlatforms = false;
-	}  
-
-	if(m_CanJump && hasLanded())
-	{
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
+			sf::Keyboard::isKeyPressed(sf::Keyboard::A)) ||
+			(!sf::Keyboard::isKeyPressed(sf::Keyboard::D) &&
+			!sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
 		{
-			setYVelocity(-350);
-			m_JumpTimer.second.restart();
-			m_CanJump = false;
-			m_Landed = false;
+				setXVelocity(0);
 		}
-	}
 
-	if(m_CanJump == false)
-	{
-		if(m_JumpTimer.second.getElapsedTime().asMilliseconds() < 300)
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			setXVelocity((float) m_RunSpeed);
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			setXVelocity((float) (-1*m_RunSpeed));
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			m_IgnoringOneSidedPlatforms = true;
+		}
+		else
+		{
+			m_IgnoringOneSidedPlatforms = false;
+		}  
+
+		if(m_CanJump && hasLanded())
 		{
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
-				addVelocity(0, -1650 * tick_ms);
+				setYVelocity(-350);
+				m_JumpTimer.second.restart();
+				m_CanJump = false;
+				m_Landed = false;
 			}
 		}
-	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) == false && sf::Keyboard::isKeyPressed(sf::Keyboard::W) == false)
-	{
-		m_CanJump = true;
+		if(m_CanJump == false)
+		{
+			if(m_JumpTimer.second.getElapsedTime().asMilliseconds() < 300)
+			{
+				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+				{
+					addVelocity(0, -1650 * tick_ms);
+				}
+			}
+		}
+
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) == false && sf::Keyboard::isKeyPressed(sf::Keyboard::W) == false)
+		{
+			m_CanJump = true;
+		}
 	}
 
 	updateLocation(tick_ms, level);
@@ -140,7 +145,7 @@ void PlayerObject::handleEvents(sf::Event* event)
 	{
 		if(event->mouseButton.button == 0)
 		{
-			ProjectileObject* projectile = new ProjectileObject(m_CurrentProjectileType);
+			ProjectileObject* projectile = new ProjectileObject(m_CurrentProjectileType, CollidesWith::OTHERS, this);
 			projectile->init(getDispatcher(), m_GameLevel);
 			projectile->setLocation(getLocation().x, getLocation().y);
 
@@ -192,6 +197,32 @@ void PlayerObject::notify(GameEvent* event)
 			m_FiringDirection.y = -ynorm;
 
 			break;
+		}
+	case Event::EVENT_OBJECTS_COLLIDING:
+		{
+			GameObject* first = ((EventObjectsColliding*)event)->first;
+			GameObject* second = ((EventObjectsColliding*)event)->second;
+
+			if( first == this &&
+				second->getCollisionType() == CollidesWith::PLAYERS )
+			{
+				if( m_InvulnClock.getElapsedTime().asMilliseconds() > m_TimeBetweenPainInMs )
+				{
+					m_NoControlTimer.restart();
+					m_InvulnClock.restart();
+
+					if( m_MouseLookLeft )
+					{
+						m_Velocity.x = 100;
+						m_Velocity.y = -200;
+					}
+					else
+					{
+						m_Velocity.x = -100;
+						m_Velocity.y = -200;
+					}
+				}
+			}
 		}
 	case Event::EVENT_SFEVENT:
 		{

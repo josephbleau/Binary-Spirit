@@ -4,16 +4,19 @@
 
 #include "Animation.h"
 #include "GameLevel.h"
+#include "GameObject.h"
 #include "EventDispatcher.h"
 #include "GameObjectTerrainCollision.h"
 
 #include "GameObjectTerrainCollision.h"
 
-ProjectileObject::ProjectileObject(ProjectileType::Type type)
+ProjectileObject::ProjectileObject(ProjectileType::Type type,  CollidesWith::Type collisionType, GameObject* owner)
+	: m_Type( type )
+	, m_Owner( owner )
 {
-	m_Type = type;
 	m_MovementEnabled = true;
 	setCollisionRect(sf::IntRect(0,0,10,10));
+	m_CollidesWith =  collisionType;
 }
 
 ProjectileObject::~ProjectileObject()

@@ -176,7 +176,17 @@ void InWorldState::notify(GameEvent* event)
 	}
 }
 
+GameObject* InWorldState::getPlayer()
+{
+	return (GameObject*) &m_Player;
+}
+
 sf::Vector2f InWorldState::getPlayerLocation() const
 {
 	return m_Player.getLocation();
+}
+
+const std::vector<GameObject*>& InWorldState::getObjects()
+{
+	return m_GameObjects;
 }

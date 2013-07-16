@@ -36,7 +36,9 @@ public:
 
 	void notify(GameEvent* event);
 
+	GameObject* getPlayer();
 	sf::Vector2f getPlayerLocation() const;
+	const std::vector<GameObject*>& getObjects();
 
 	InWorldState();
 	~InWorldState();
