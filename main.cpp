@@ -11,14 +11,22 @@ int main(int argc, char* argv[])
 	sf::RenderWindow app(sf::VideoMode(1024, 768), "Binary Spirit"); 
 	//app.setVerticalSyncEnabled(true);
 
-	ResourceLocator::provideDrawSurface(&app);
-	ResourceLocator::loadResources("res/atlus.txt");
-
 	std::string initialLevel = "test";
+	std::string currentPath = argv[0];
+	currentPath = currentPath.substr(0, currentPath.find_last_of("\\")) + "\\"; 
 
-	if( argc == 2 )
+	ResourceLocator::provideDrawSurface(&app);
+	ResourceLocator::loadResources(currentPath);
+
+	if( argc > 1 )
 	{
-		if( ResourceLocator::loadMapResource( "__argmap", argv[1] ) )
+		std::string mapFileName;
+		for( int i = 1; i < argc; ++i )
+		{
+			mapFileName.append(argv[i]);
+		}
+
+		if( ResourceLocator::loadMapResource( "__argmap", currentPath + mapFileName ) )
 			initialLevel = "__argmap";
 	}
 

@@ -151,12 +151,13 @@ void ResourceLocator::loadAnimationResource(std::string identifier, std::string 
 	}
 }
 
-void ResourceLocator::loadResources(std::string resource_file)
+void ResourceLocator::loadResources(std::string currentPath)
 {
-	std::ifstream atlus(resource_file);
+	std::ifstream atlus(currentPath + "res\\atlus.txt");
+
 	if(!atlus.good())
 	{
-		std::cerr << "Error loading atlus " << resource_file << " in loadResources" << std::endl;
+		std::cerr << "Error loading atlus in loadResources" << std::endl;
 	}
 
 	std::cout << "Loading resources..." << std::endl;
@@ -177,7 +178,7 @@ void ResourceLocator::loadResources(std::string resource_file)
 		{
 			std::string type = tokens[0];
 			std::string identifier = tokens[1];
-			std::string path = tokens[2];
+			std::string path = currentPath + tokens[2];
 
 			if(type == "tex")
 			{
