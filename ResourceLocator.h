@@ -29,7 +29,7 @@ public:
 	static sf::RenderWindow* getDrawSurface();
 	static sf::Vector2u getDrawSurfaceSize();
 
-	static void loadMapResource(std::string identifier, std::string path);
+	static bool loadMapResource(std::string identifier, std::string path);
 	static void loadTextureResource(std::string identifier, std::string path);
 	static void loadAnimationResource(std::string identifier, std::string path,
 		int frame_width, int frame_height, int ms_between_frames, 

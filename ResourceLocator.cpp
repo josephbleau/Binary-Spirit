@@ -44,12 +44,17 @@ sf::Vector2u ResourceLocator::getDrawSurfaceSize()
 	return ResourceLocator::m_DrawSurface->getSize();
 }
 
-void ResourceLocator::loadMapResource(std::string identifier, std::string path)
+bool ResourceLocator::loadMapResource(std::string identifier, std::string path)
 {
 	if(ResourceLocator::m_Textures.count(identifier) == 0)
 	{
 		Tmx::Map* map = new Tmx::Map();
+
 		map->ParseFile(path);
+
+		if( map->HasError() )
+			return false;
+
 		ResourceLocator::m_Maps[identifier] = map;
 
 		std::cout << "\t" << identifier << " map loading..." << std::endl;
@@ -90,7 +95,10 @@ void ResourceLocator::loadMapResource(std::string identifier, std::string path)
 	else
 	{
 		std::cerr << "Error loading map from atlus file, map already loaded. Entry ignored." << std::endl;
+		return false;
 	}
+
+	return true;
 }
 
 void ResourceLocator::loadTextureResource(std::string identifier, std::string path)

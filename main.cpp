@@ -14,6 +14,14 @@ int main(int argc, char* argv[])
 	ResourceLocator::provideDrawSurface(&app);
 	ResourceLocator::loadResources("res/atlus.txt");
 
+	std::string initialLevel = "test";
+
+	if( argc == 2 )
+	{
+		if( ResourceLocator::loadMapResource( "__argmap", argv[1] ) )
+			initialLevel = "__argmap";
+	}
+
 	sf::Event e;
 	sf::Clock timer;
 
@@ -22,7 +30,7 @@ int main(int argc, char* argv[])
 	float delta_ms = 0;
 
 	InWorldState* state = new InWorldState();
-	state->init("test");
+	state->init( initialLevel );
 
 	GameStateManager gsm(state);
 
